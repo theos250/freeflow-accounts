@@ -148,9 +148,9 @@ function Header() {
           <a href="#audience" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Who it's for</a>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
-          <Button variant="ghost" size="sm">Sign in</Button>
-          <Button size="sm" className="bg-gradient-hero shadow-glow hover:opacity-95">
-            Get started free
+          <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+          <Button asChild size="sm" className="bg-gradient-hero shadow-glow hover:opacity-95">
+            <Link to="/auth" search={{ mode: "signup" }}>Get started free</Link>
           </Button>
         </div>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">
@@ -165,8 +165,8 @@ function Header() {
             <a href="#pricing" onClick={() => setOpen(false)} className="text-sm font-medium">Pricing</a>
             <a href="#audience" onClick={() => setOpen(false)} className="text-sm font-medium">Who it's for</a>
             <div className="mt-2 flex flex-col gap-2">
-              <Button variant="ghost" size="sm">Sign in</Button>
-              <Button size="sm" className="bg-gradient-hero">Get started free</Button>
+              <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+              <Button asChild size="sm" className="bg-gradient-hero"><Link to="/auth" search={{ mode: "signup" }}>Get started free</Link></Button>
             </div>
           </nav>
         </div>
@@ -197,10 +197,10 @@ function Hero() {
             startups, NGOs, and SMEs worldwide. No credit card, no limits, free forever.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" className="bg-gradient-hero shadow-glow hover:opacity-95">
-              Start free — no card required <ArrowRight className="ml-1 h-4 w-4" />
+            <Button asChild size="lg" className="bg-gradient-hero shadow-glow hover:opacity-95">
+              <Link to="/auth" search={{ mode: "signup" }}>Start free — no card required <ArrowRight className="ml-1 h-4 w-4" /></Link>
             </Button>
-            <Button size="lg" variant="outline">See live demo</Button>
+            <Button asChild size="lg" variant="outline"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             Join 100,000+ businesses · GDPR-ready · Bank-grade security
@@ -435,10 +435,11 @@ function Pricing() {
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{p.tagline}</p>
               <Button
+                asChild
                 className={`mt-6 w-full ${p.highlighted ? "bg-gradient-hero shadow-glow hover:opacity-95" : ""}`}
                 variant={p.highlighted ? "default" : "outline"}
               >
-                {p.cta}
+                <Link to="/auth" search={{ mode: "signup" }}>{p.cta}</Link>
               </Button>
               <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
@@ -472,11 +473,11 @@ function CTA() {
             Join 100,000+ businesses using Free Accounting. No credit card, no limits, free forever.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" variant="secondary" className="bg-card text-foreground hover:bg-card/90">
-              Get started free <ArrowRight className="ml-1 h-4 w-4" />
+            <Button asChild size="lg" variant="secondary" className="bg-card text-foreground hover:bg-card/90">
+              <Link to="/auth" search={{ mode: "signup" }}>Get started free <ArrowRight className="ml-1 h-4 w-4" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20">
-              Book a demo
+            <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20">
+              <Link to="/auth" search={{ mode: "login" }}>Sign in</Link>
             </Button>
           </div>
         </div>
