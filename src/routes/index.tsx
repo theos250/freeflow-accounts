@@ -165,8 +165,8 @@ function Header() {
             <a href="#pricing" onClick={() => setOpen(false)} className="text-sm font-medium">Pricing</a>
             <a href="#audience" onClick={() => setOpen(false)} className="text-sm font-medium">Who it's for</a>
             <div className="mt-2 flex flex-col gap-2">
-              <Button variant="ghost" size="sm">Sign in</Button>
-              <Button size="sm" className="bg-gradient-hero">Get started free</Button>
+              <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+              <Button asChild size="sm" className="bg-gradient-hero"><Link to="/auth" search={{ mode: "signup" }}>Get started free</Link></Button>
             </div>
           </nav>
         </div>
