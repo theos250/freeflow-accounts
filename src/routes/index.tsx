@@ -435,10 +435,11 @@ function Pricing() {
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{p.tagline}</p>
               <Button
+                asChild
                 className={`mt-6 w-full ${p.highlighted ? "bg-gradient-hero shadow-glow hover:opacity-95" : ""}`}
                 variant={p.highlighted ? "default" : "outline"}
               >
-                {p.cta}
+                <Link to="/auth" search={{ mode: "signup" }}>{p.cta}</Link>
               </Button>
               <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
