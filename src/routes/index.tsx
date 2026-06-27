@@ -148,9 +148,9 @@ function Header() {
           <a href="#audience" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Who it's for</a>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
-          <Button variant="ghost" size="sm">Sign in</Button>
-          <Button size="sm" className="bg-gradient-hero shadow-glow hover:opacity-95">
-            Get started free
+          <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+          <Button asChild size="sm" className="bg-gradient-hero shadow-glow hover:opacity-95">
+            <Link to="/auth" search={{ mode: "signup" }}>Get started free</Link>
           </Button>
         </div>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">
