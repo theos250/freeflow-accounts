@@ -473,11 +473,11 @@ function CTA() {
             Join 100,000+ businesses using Free Accounting. No credit card, no limits, free forever.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" variant="secondary" className="bg-card text-foreground hover:bg-card/90">
-              Get started free <ArrowRight className="ml-1 h-4 w-4" />
+            <Button asChild size="lg" variant="secondary" className="bg-card text-foreground hover:bg-card/90">
+              <Link to="/auth" search={{ mode: "signup" }}>Get started free <ArrowRight className="ml-1 h-4 w-4" /></Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20">
-              Book a demo
+            <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20">
+              <Link to="/auth" search={{ mode: "login" }}>Sign in</Link>
             </Button>
           </div>
         </div>
