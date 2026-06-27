@@ -197,10 +197,10 @@ function Hero() {
             startups, NGOs, and SMEs worldwide. No credit card, no limits, free forever.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" className="bg-gradient-hero shadow-glow hover:opacity-95">
-              Start free — no card required <ArrowRight className="ml-1 h-4 w-4" />
+            <Button asChild size="lg" className="bg-gradient-hero shadow-glow hover:opacity-95">
+              <Link to="/auth" search={{ mode: "signup" }}>Start free — no card required <ArrowRight className="ml-1 h-4 w-4" /></Link>
             </Button>
-            <Button size="lg" variant="outline">See live demo</Button>
+            <Button asChild size="lg" variant="outline"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             Join 100,000+ businesses · GDPR-ready · Bank-grade security
