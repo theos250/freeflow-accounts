@@ -19,6 +19,33 @@ import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
+import { Route as AuthenticatedCompaniesRouteImport } from './routes/_authenticated/companies'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
+import { Route as AuthenticatedAppsRouteImport } from './routes/_authenticated/apps'
+import { Route as AuthenticatedSalesRecurringRouteImport } from './routes/_authenticated/sales.recurring'
+import { Route as AuthenticatedSalesPaymentsRouteImport } from './routes/_authenticated/sales.payments'
+import { Route as AuthenticatedSalesEstimatesRouteImport } from './routes/_authenticated/sales.estimates'
+import { Route as AuthenticatedSalesCreditNotesRouteImport } from './routes/_authenticated/sales.credit-notes'
+import { Route as AuthenticatedPurchasesVendorsRouteImport } from './routes/_authenticated/purchases.vendors'
+import { Route as AuthenticatedPurchasesOrdersRouteImport } from './routes/_authenticated/purchases.orders'
+import { Route as AuthenticatedPurchasesBillsRouteImport } from './routes/_authenticated/purchases.bills'
+import { Route as AuthenticatedItemsServicesRouteImport } from './routes/_authenticated/items.services'
+import { Route as AuthenticatedItemsProductsRouteImport } from './routes/_authenticated/items.products'
+import { Route as AuthenticatedItemsInventoryRouteImport } from './routes/_authenticated/items.inventory'
+import { Route as AuthenticatedItemsCategoriesRouteImport } from './routes/_authenticated/items.categories'
+import { Route as AuthenticatedHrLeaveRouteImport } from './routes/_authenticated/hr.leave'
+import { Route as AuthenticatedHrEmployeesRouteImport } from './routes/_authenticated/hr.employees'
+import { Route as AuthenticatedHrDepartmentsRouteImport } from './routes/_authenticated/hr.departments'
+import { Route as AuthenticatedHrClaimsRouteImport } from './routes/_authenticated/hr.claims'
+import { Route as AuthenticatedBankingTransfersRouteImport } from './routes/_authenticated/banking.transfers'
+import { Route as AuthenticatedBankingTransactionsRouteImport } from './routes/_authenticated/banking.transactions'
+import { Route as AuthenticatedBankingReconciliationsRouteImport } from './routes/_authenticated/banking.reconciliations'
+import { Route as AuthenticatedBankingFeedsRouteImport } from './routes/_authenticated/banking.feeds'
+import { Route as AuthenticatedBankingAccountsRouteImport } from './routes/_authenticated/banking.accounts'
+import { Route as AuthenticatedAccountingTrialBalanceRouteImport } from './routes/_authenticated/accounting.trial-balance'
+import { Route as AuthenticatedAccountingLedgerRouteImport } from './routes/_authenticated/accounting.ledger'
+import { Route as AuthenticatedAccountingJournalsRouteImport } from './routes/_authenticated/accounting.journals'
+import { Route as AuthenticatedAccountingChartRouteImport } from './routes/_authenticated/accounting.chart'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -69,28 +96,239 @@ const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCompaniesRoute = AuthenticatedCompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppsRoute = AuthenticatedAppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSalesRecurringRoute =
+  AuthenticatedSalesRecurringRouteImport.update({
+    id: '/sales/recurring',
+    path: '/sales/recurring',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesPaymentsRoute =
+  AuthenticatedSalesPaymentsRouteImport.update({
+    id: '/sales/payments',
+    path: '/sales/payments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesEstimatesRoute =
+  AuthenticatedSalesEstimatesRouteImport.update({
+    id: '/sales/estimates',
+    path: '/sales/estimates',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesCreditNotesRoute =
+  AuthenticatedSalesCreditNotesRouteImport.update({
+    id: '/sales/credit-notes',
+    path: '/sales/credit-notes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchasesVendorsRoute =
+  AuthenticatedPurchasesVendorsRouteImport.update({
+    id: '/purchases/vendors',
+    path: '/purchases/vendors',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchasesOrdersRoute =
+  AuthenticatedPurchasesOrdersRouteImport.update({
+    id: '/purchases/orders',
+    path: '/purchases/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchasesBillsRoute =
+  AuthenticatedPurchasesBillsRouteImport.update({
+    id: '/purchases/bills',
+    path: '/purchases/bills',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedItemsServicesRoute =
+  AuthenticatedItemsServicesRouteImport.update({
+    id: '/items/services',
+    path: '/items/services',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedItemsProductsRoute =
+  AuthenticatedItemsProductsRouteImport.update({
+    id: '/items/products',
+    path: '/items/products',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedItemsInventoryRoute =
+  AuthenticatedItemsInventoryRouteImport.update({
+    id: '/items/inventory',
+    path: '/items/inventory',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedItemsCategoriesRoute =
+  AuthenticatedItemsCategoriesRouteImport.update({
+    id: '/items/categories',
+    path: '/items/categories',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedHrLeaveRoute = AuthenticatedHrLeaveRouteImport.update({
+  id: '/hr/leave',
+  path: '/hr/leave',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHrEmployeesRoute =
+  AuthenticatedHrEmployeesRouteImport.update({
+    id: '/hr/employees',
+    path: '/hr/employees',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedHrDepartmentsRoute =
+  AuthenticatedHrDepartmentsRouteImport.update({
+    id: '/hr/departments',
+    path: '/hr/departments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedHrClaimsRoute = AuthenticatedHrClaimsRouteImport.update({
+  id: '/hr/claims',
+  path: '/hr/claims',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBankingTransfersRoute =
+  AuthenticatedBankingTransfersRouteImport.update({
+    id: '/banking/transfers',
+    path: '/banking/transfers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankingTransactionsRoute =
+  AuthenticatedBankingTransactionsRouteImport.update({
+    id: '/banking/transactions',
+    path: '/banking/transactions',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankingReconciliationsRoute =
+  AuthenticatedBankingReconciliationsRouteImport.update({
+    id: '/banking/reconciliations',
+    path: '/banking/reconciliations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankingFeedsRoute =
+  AuthenticatedBankingFeedsRouteImport.update({
+    id: '/banking/feeds',
+    path: '/banking/feeds',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankingAccountsRoute =
+  AuthenticatedBankingAccountsRouteImport.update({
+    id: '/banking/accounts',
+    path: '/banking/accounts',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAccountingTrialBalanceRoute =
+  AuthenticatedAccountingTrialBalanceRouteImport.update({
+    id: '/accounting/trial-balance',
+    path: '/accounting/trial-balance',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAccountingLedgerRoute =
+  AuthenticatedAccountingLedgerRouteImport.update({
+    id: '/accounting/ledger',
+    path: '/accounting/ledger',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAccountingJournalsRoute =
+  AuthenticatedAccountingJournalsRouteImport.update({
+    id: '/accounting/journals',
+    path: '/accounting/journals',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAccountingChartRoute =
+  AuthenticatedAccountingChartRouteImport.update({
+    id: '/accounting/chart',
+    path: '/accounting/chart',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/apps': typeof AuthenticatedAppsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/companies': typeof AuthenticatedCompaniesRoute
   '/customers': typeof AuthenticatedCustomersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/accounting/chart': typeof AuthenticatedAccountingChartRoute
+  '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
+  '/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
+  '/accounting/trial-balance': typeof AuthenticatedAccountingTrialBalanceRoute
+  '/banking/accounts': typeof AuthenticatedBankingAccountsRoute
+  '/banking/feeds': typeof AuthenticatedBankingFeedsRoute
+  '/banking/reconciliations': typeof AuthenticatedBankingReconciliationsRoute
+  '/banking/transactions': typeof AuthenticatedBankingTransactionsRoute
+  '/banking/transfers': typeof AuthenticatedBankingTransfersRoute
+  '/hr/claims': typeof AuthenticatedHrClaimsRoute
+  '/hr/departments': typeof AuthenticatedHrDepartmentsRoute
+  '/hr/employees': typeof AuthenticatedHrEmployeesRoute
+  '/hr/leave': typeof AuthenticatedHrLeaveRoute
+  '/items/categories': typeof AuthenticatedItemsCategoriesRoute
+  '/items/inventory': typeof AuthenticatedItemsInventoryRoute
+  '/items/products': typeof AuthenticatedItemsProductsRoute
+  '/items/services': typeof AuthenticatedItemsServicesRoute
+  '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
+  '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
+  '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
+  '/sales/credit-notes': typeof AuthenticatedSalesCreditNotesRoute
+  '/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
+  '/sales/payments': typeof AuthenticatedSalesPaymentsRoute
+  '/sales/recurring': typeof AuthenticatedSalesRecurringRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/apps': typeof AuthenticatedAppsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/companies': typeof AuthenticatedCompaniesRoute
   '/customers': typeof AuthenticatedCustomersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/accounting/chart': typeof AuthenticatedAccountingChartRoute
+  '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
+  '/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
+  '/accounting/trial-balance': typeof AuthenticatedAccountingTrialBalanceRoute
+  '/banking/accounts': typeof AuthenticatedBankingAccountsRoute
+  '/banking/feeds': typeof AuthenticatedBankingFeedsRoute
+  '/banking/reconciliations': typeof AuthenticatedBankingReconciliationsRoute
+  '/banking/transactions': typeof AuthenticatedBankingTransactionsRoute
+  '/banking/transfers': typeof AuthenticatedBankingTransfersRoute
+  '/hr/claims': typeof AuthenticatedHrClaimsRoute
+  '/hr/departments': typeof AuthenticatedHrDepartmentsRoute
+  '/hr/employees': typeof AuthenticatedHrEmployeesRoute
+  '/hr/leave': typeof AuthenticatedHrLeaveRoute
+  '/items/categories': typeof AuthenticatedItemsCategoriesRoute
+  '/items/inventory': typeof AuthenticatedItemsInventoryRoute
+  '/items/products': typeof AuthenticatedItemsProductsRoute
+  '/items/services': typeof AuthenticatedItemsServicesRoute
+  '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
+  '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
+  '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
+  '/sales/credit-notes': typeof AuthenticatedSalesCreditNotesRoute
+  '/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
+  '/sales/payments': typeof AuthenticatedSalesPaymentsRoute
+  '/sales/recurring': typeof AuthenticatedSalesRecurringRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -99,11 +337,38 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/apps': typeof AuthenticatedAppsRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
+  '/_authenticated/companies': typeof AuthenticatedCompaniesRoute
   '/_authenticated/customers': typeof AuthenticatedCustomersRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/accounting/chart': typeof AuthenticatedAccountingChartRoute
+  '/_authenticated/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
+  '/_authenticated/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
+  '/_authenticated/accounting/trial-balance': typeof AuthenticatedAccountingTrialBalanceRoute
+  '/_authenticated/banking/accounts': typeof AuthenticatedBankingAccountsRoute
+  '/_authenticated/banking/feeds': typeof AuthenticatedBankingFeedsRoute
+  '/_authenticated/banking/reconciliations': typeof AuthenticatedBankingReconciliationsRoute
+  '/_authenticated/banking/transactions': typeof AuthenticatedBankingTransactionsRoute
+  '/_authenticated/banking/transfers': typeof AuthenticatedBankingTransfersRoute
+  '/_authenticated/hr/claims': typeof AuthenticatedHrClaimsRoute
+  '/_authenticated/hr/departments': typeof AuthenticatedHrDepartmentsRoute
+  '/_authenticated/hr/employees': typeof AuthenticatedHrEmployeesRoute
+  '/_authenticated/hr/leave': typeof AuthenticatedHrLeaveRoute
+  '/_authenticated/items/categories': typeof AuthenticatedItemsCategoriesRoute
+  '/_authenticated/items/inventory': typeof AuthenticatedItemsInventoryRoute
+  '/_authenticated/items/products': typeof AuthenticatedItemsProductsRoute
+  '/_authenticated/items/services': typeof AuthenticatedItemsServicesRoute
+  '/_authenticated/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
+  '/_authenticated/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
+  '/_authenticated/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
+  '/_authenticated/sales/credit-notes': typeof AuthenticatedSalesCreditNotesRoute
+  '/_authenticated/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
+  '/_authenticated/sales/payments': typeof AuthenticatedSalesPaymentsRoute
+  '/_authenticated/sales/recurring': typeof AuthenticatedSalesRecurringRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -112,22 +377,76 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/apps'
+    | '/calendar'
+    | '/companies'
     | '/customers'
     | '/dashboard'
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/accounting/chart'
+    | '/accounting/journals'
+    | '/accounting/ledger'
+    | '/accounting/trial-balance'
+    | '/banking/accounts'
+    | '/banking/feeds'
+    | '/banking/reconciliations'
+    | '/banking/transactions'
+    | '/banking/transfers'
+    | '/hr/claims'
+    | '/hr/departments'
+    | '/hr/employees'
+    | '/hr/leave'
+    | '/items/categories'
+    | '/items/inventory'
+    | '/items/products'
+    | '/items/services'
+    | '/purchases/bills'
+    | '/purchases/orders'
+    | '/purchases/vendors'
+    | '/sales/credit-notes'
+    | '/sales/estimates'
+    | '/sales/payments'
+    | '/sales/recurring'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/apps'
+    | '/calendar'
+    | '/companies'
     | '/customers'
     | '/dashboard'
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/accounting/chart'
+    | '/accounting/journals'
+    | '/accounting/ledger'
+    | '/accounting/trial-balance'
+    | '/banking/accounts'
+    | '/banking/feeds'
+    | '/banking/reconciliations'
+    | '/banking/transactions'
+    | '/banking/transfers'
+    | '/hr/claims'
+    | '/hr/departments'
+    | '/hr/employees'
+    | '/hr/leave'
+    | '/items/categories'
+    | '/items/inventory'
+    | '/items/products'
+    | '/items/services'
+    | '/purchases/bills'
+    | '/purchases/orders'
+    | '/purchases/vendors'
+    | '/sales/credit-notes'
+    | '/sales/estimates'
+    | '/sales/payments'
+    | '/sales/recurring'
   id:
     | '__root__'
     | '/'
@@ -135,11 +454,38 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/_authenticated/apps'
+    | '/_authenticated/calendar'
+    | '/_authenticated/companies'
     | '/_authenticated/customers'
     | '/_authenticated/dashboard'
     | '/_authenticated/expenses'
     | '/_authenticated/invoices'
     | '/_authenticated/reports'
+    | '/_authenticated/accounting/chart'
+    | '/_authenticated/accounting/journals'
+    | '/_authenticated/accounting/ledger'
+    | '/_authenticated/accounting/trial-balance'
+    | '/_authenticated/banking/accounts'
+    | '/_authenticated/banking/feeds'
+    | '/_authenticated/banking/reconciliations'
+    | '/_authenticated/banking/transactions'
+    | '/_authenticated/banking/transfers'
+    | '/_authenticated/hr/claims'
+    | '/_authenticated/hr/departments'
+    | '/_authenticated/hr/employees'
+    | '/_authenticated/hr/leave'
+    | '/_authenticated/items/categories'
+    | '/_authenticated/items/inventory'
+    | '/_authenticated/items/products'
+    | '/_authenticated/items/services'
+    | '/_authenticated/purchases/bills'
+    | '/_authenticated/purchases/orders'
+    | '/_authenticated/purchases/vendors'
+    | '/_authenticated/sales/credit-notes'
+    | '/_authenticated/sales/estimates'
+    | '/_authenticated/sales/payments'
+    | '/_authenticated/sales/recurring'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,23 +568,268 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCustomersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/companies': {
+      id: '/_authenticated/companies'
+      path: '/companies'
+      fullPath: '/companies'
+      preLoaderRoute: typeof AuthenticatedCompaniesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/apps': {
+      id: '/_authenticated/apps'
+      path: '/apps'
+      fullPath: '/apps'
+      preLoaderRoute: typeof AuthenticatedAppsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/recurring': {
+      id: '/_authenticated/sales/recurring'
+      path: '/sales/recurring'
+      fullPath: '/sales/recurring'
+      preLoaderRoute: typeof AuthenticatedSalesRecurringRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/payments': {
+      id: '/_authenticated/sales/payments'
+      path: '/sales/payments'
+      fullPath: '/sales/payments'
+      preLoaderRoute: typeof AuthenticatedSalesPaymentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/estimates': {
+      id: '/_authenticated/sales/estimates'
+      path: '/sales/estimates'
+      fullPath: '/sales/estimates'
+      preLoaderRoute: typeof AuthenticatedSalesEstimatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/credit-notes': {
+      id: '/_authenticated/sales/credit-notes'
+      path: '/sales/credit-notes'
+      fullPath: '/sales/credit-notes'
+      preLoaderRoute: typeof AuthenticatedSalesCreditNotesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchases/vendors': {
+      id: '/_authenticated/purchases/vendors'
+      path: '/purchases/vendors'
+      fullPath: '/purchases/vendors'
+      preLoaderRoute: typeof AuthenticatedPurchasesVendorsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchases/orders': {
+      id: '/_authenticated/purchases/orders'
+      path: '/purchases/orders'
+      fullPath: '/purchases/orders'
+      preLoaderRoute: typeof AuthenticatedPurchasesOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchases/bills': {
+      id: '/_authenticated/purchases/bills'
+      path: '/purchases/bills'
+      fullPath: '/purchases/bills'
+      preLoaderRoute: typeof AuthenticatedPurchasesBillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/items/services': {
+      id: '/_authenticated/items/services'
+      path: '/items/services'
+      fullPath: '/items/services'
+      preLoaderRoute: typeof AuthenticatedItemsServicesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/items/products': {
+      id: '/_authenticated/items/products'
+      path: '/items/products'
+      fullPath: '/items/products'
+      preLoaderRoute: typeof AuthenticatedItemsProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/items/inventory': {
+      id: '/_authenticated/items/inventory'
+      path: '/items/inventory'
+      fullPath: '/items/inventory'
+      preLoaderRoute: typeof AuthenticatedItemsInventoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/items/categories': {
+      id: '/_authenticated/items/categories'
+      path: '/items/categories'
+      fullPath: '/items/categories'
+      preLoaderRoute: typeof AuthenticatedItemsCategoriesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hr/leave': {
+      id: '/_authenticated/hr/leave'
+      path: '/hr/leave'
+      fullPath: '/hr/leave'
+      preLoaderRoute: typeof AuthenticatedHrLeaveRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hr/employees': {
+      id: '/_authenticated/hr/employees'
+      path: '/hr/employees'
+      fullPath: '/hr/employees'
+      preLoaderRoute: typeof AuthenticatedHrEmployeesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hr/departments': {
+      id: '/_authenticated/hr/departments'
+      path: '/hr/departments'
+      fullPath: '/hr/departments'
+      preLoaderRoute: typeof AuthenticatedHrDepartmentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hr/claims': {
+      id: '/_authenticated/hr/claims'
+      path: '/hr/claims'
+      fullPath: '/hr/claims'
+      preLoaderRoute: typeof AuthenticatedHrClaimsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banking/transfers': {
+      id: '/_authenticated/banking/transfers'
+      path: '/banking/transfers'
+      fullPath: '/banking/transfers'
+      preLoaderRoute: typeof AuthenticatedBankingTransfersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banking/transactions': {
+      id: '/_authenticated/banking/transactions'
+      path: '/banking/transactions'
+      fullPath: '/banking/transactions'
+      preLoaderRoute: typeof AuthenticatedBankingTransactionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banking/reconciliations': {
+      id: '/_authenticated/banking/reconciliations'
+      path: '/banking/reconciliations'
+      fullPath: '/banking/reconciliations'
+      preLoaderRoute: typeof AuthenticatedBankingReconciliationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banking/feeds': {
+      id: '/_authenticated/banking/feeds'
+      path: '/banking/feeds'
+      fullPath: '/banking/feeds'
+      preLoaderRoute: typeof AuthenticatedBankingFeedsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banking/accounts': {
+      id: '/_authenticated/banking/accounts'
+      path: '/banking/accounts'
+      fullPath: '/banking/accounts'
+      preLoaderRoute: typeof AuthenticatedBankingAccountsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/accounting/trial-balance': {
+      id: '/_authenticated/accounting/trial-balance'
+      path: '/accounting/trial-balance'
+      fullPath: '/accounting/trial-balance'
+      preLoaderRoute: typeof AuthenticatedAccountingTrialBalanceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/accounting/ledger': {
+      id: '/_authenticated/accounting/ledger'
+      path: '/accounting/ledger'
+      fullPath: '/accounting/ledger'
+      preLoaderRoute: typeof AuthenticatedAccountingLedgerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/accounting/journals': {
+      id: '/_authenticated/accounting/journals'
+      path: '/accounting/journals'
+      fullPath: '/accounting/journals'
+      preLoaderRoute: typeof AuthenticatedAccountingJournalsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/accounting/chart': {
+      id: '/_authenticated/accounting/chart'
+      path: '/accounting/chart'
+      fullPath: '/accounting/chart'
+      preLoaderRoute: typeof AuthenticatedAccountingChartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppsRoute: typeof AuthenticatedAppsRoute
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
+  AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRoute
   AuthenticatedCustomersRoute: typeof AuthenticatedCustomersRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
   AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedAccountingChartRoute: typeof AuthenticatedAccountingChartRoute
+  AuthenticatedAccountingJournalsRoute: typeof AuthenticatedAccountingJournalsRoute
+  AuthenticatedAccountingLedgerRoute: typeof AuthenticatedAccountingLedgerRoute
+  AuthenticatedAccountingTrialBalanceRoute: typeof AuthenticatedAccountingTrialBalanceRoute
+  AuthenticatedBankingAccountsRoute: typeof AuthenticatedBankingAccountsRoute
+  AuthenticatedBankingFeedsRoute: typeof AuthenticatedBankingFeedsRoute
+  AuthenticatedBankingReconciliationsRoute: typeof AuthenticatedBankingReconciliationsRoute
+  AuthenticatedBankingTransactionsRoute: typeof AuthenticatedBankingTransactionsRoute
+  AuthenticatedBankingTransfersRoute: typeof AuthenticatedBankingTransfersRoute
+  AuthenticatedHrClaimsRoute: typeof AuthenticatedHrClaimsRoute
+  AuthenticatedHrDepartmentsRoute: typeof AuthenticatedHrDepartmentsRoute
+  AuthenticatedHrEmployeesRoute: typeof AuthenticatedHrEmployeesRoute
+  AuthenticatedHrLeaveRoute: typeof AuthenticatedHrLeaveRoute
+  AuthenticatedItemsCategoriesRoute: typeof AuthenticatedItemsCategoriesRoute
+  AuthenticatedItemsInventoryRoute: typeof AuthenticatedItemsInventoryRoute
+  AuthenticatedItemsProductsRoute: typeof AuthenticatedItemsProductsRoute
+  AuthenticatedItemsServicesRoute: typeof AuthenticatedItemsServicesRoute
+  AuthenticatedPurchasesBillsRoute: typeof AuthenticatedPurchasesBillsRoute
+  AuthenticatedPurchasesOrdersRoute: typeof AuthenticatedPurchasesOrdersRoute
+  AuthenticatedPurchasesVendorsRoute: typeof AuthenticatedPurchasesVendorsRoute
+  AuthenticatedSalesCreditNotesRoute: typeof AuthenticatedSalesCreditNotesRoute
+  AuthenticatedSalesEstimatesRoute: typeof AuthenticatedSalesEstimatesRoute
+  AuthenticatedSalesPaymentsRoute: typeof AuthenticatedSalesPaymentsRoute
+  AuthenticatedSalesRecurringRoute: typeof AuthenticatedSalesRecurringRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppsRoute: AuthenticatedAppsRoute,
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
+  AuthenticatedCompaniesRoute: AuthenticatedCompaniesRoute,
   AuthenticatedCustomersRoute: AuthenticatedCustomersRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
   AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedAccountingChartRoute: AuthenticatedAccountingChartRoute,
+  AuthenticatedAccountingJournalsRoute: AuthenticatedAccountingJournalsRoute,
+  AuthenticatedAccountingLedgerRoute: AuthenticatedAccountingLedgerRoute,
+  AuthenticatedAccountingTrialBalanceRoute:
+    AuthenticatedAccountingTrialBalanceRoute,
+  AuthenticatedBankingAccountsRoute: AuthenticatedBankingAccountsRoute,
+  AuthenticatedBankingFeedsRoute: AuthenticatedBankingFeedsRoute,
+  AuthenticatedBankingReconciliationsRoute:
+    AuthenticatedBankingReconciliationsRoute,
+  AuthenticatedBankingTransactionsRoute: AuthenticatedBankingTransactionsRoute,
+  AuthenticatedBankingTransfersRoute: AuthenticatedBankingTransfersRoute,
+  AuthenticatedHrClaimsRoute: AuthenticatedHrClaimsRoute,
+  AuthenticatedHrDepartmentsRoute: AuthenticatedHrDepartmentsRoute,
+  AuthenticatedHrEmployeesRoute: AuthenticatedHrEmployeesRoute,
+  AuthenticatedHrLeaveRoute: AuthenticatedHrLeaveRoute,
+  AuthenticatedItemsCategoriesRoute: AuthenticatedItemsCategoriesRoute,
+  AuthenticatedItemsInventoryRoute: AuthenticatedItemsInventoryRoute,
+  AuthenticatedItemsProductsRoute: AuthenticatedItemsProductsRoute,
+  AuthenticatedItemsServicesRoute: AuthenticatedItemsServicesRoute,
+  AuthenticatedPurchasesBillsRoute: AuthenticatedPurchasesBillsRoute,
+  AuthenticatedPurchasesOrdersRoute: AuthenticatedPurchasesOrdersRoute,
+  AuthenticatedPurchasesVendorsRoute: AuthenticatedPurchasesVendorsRoute,
+  AuthenticatedSalesCreditNotesRoute: AuthenticatedSalesCreditNotesRoute,
+  AuthenticatedSalesEstimatesRoute: AuthenticatedSalesEstimatesRoute,
+  AuthenticatedSalesPaymentsRoute: AuthenticatedSalesPaymentsRoute,
+  AuthenticatedSalesRecurringRoute: AuthenticatedSalesRecurringRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
