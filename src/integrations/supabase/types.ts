@@ -368,7 +368,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_invoice_stock: {
+        Args: { _direction: number; _invoice_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
