@@ -132,7 +132,9 @@ export type Database = {
           description: string
           id: string
           invoice_id: string
+          item_id: string | null
           quantity: number
+          tax_rate: number
           unit_price: number
           user_id: string
         }
@@ -142,7 +144,9 @@ export type Database = {
           description: string
           id?: string
           invoice_id: string
+          item_id?: string | null
           quantity?: number
+          tax_rate?: number
           unit_price?: number
           user_id: string
         }
@@ -152,7 +156,9 @@ export type Database = {
           description?: string
           id?: string
           invoice_id?: string
+          item_id?: string | null
           quantity?: number
+          tax_rate?: number
           unit_price?: number
           user_id?: string
         }
@@ -162,6 +168,13 @@ export type Database = {
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
             referencedColumns: ["id"]
           },
         ]
@@ -221,6 +234,104 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      item_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      items: {
+        Row: {
+          category_id: string | null
+          cost: number
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+          sku: string | null
+          stock_quantity: number
+          tax_rate: number
+          track_inventory: boolean
+          type: string
+          unit: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          cost?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number
+          sku?: string | null
+          stock_quantity?: number
+          tax_rate?: number
+          track_inventory?: boolean
+          type?: string
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string | null
+          cost?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+          sku?: string | null
+          stock_quantity?: number
+          tax_rate?: number
+          track_inventory?: boolean
+          type?: string
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "item_categories"
             referencedColumns: ["id"]
           },
         ]
