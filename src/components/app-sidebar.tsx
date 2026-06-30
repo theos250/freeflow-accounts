@@ -26,6 +26,7 @@ const groups: Group[] = [
     { label: "Services", to: "/items/services" },
     { label: "Categories", to: "/items/categories" },
     { label: "Inventory", to: "/items/inventory" },
+    { label: "Stock movements", to: "/items/stock-movements" },
   ]},
   { label: "Sales", icon: ShoppingCart, items: [
     { label: "Invoices", to: "/invoices" },
