@@ -45,6 +45,7 @@ function reasonVariant(r: string): "default" | "secondary" | "destructive" {
 function StockMovementsPage() {
   const [rows, setRows] = useState<Movement[]>([]);
   const [items, setItems] = useState<ItemOpt[]>([]);
+  const [profiles, setProfiles] = useState<ProfileMap>({});
   const [itemFilter, setItemFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
 
@@ -61,8 +62,22 @@ function StockMovementsPage() {
       supabase.from("items").select("id,name").eq("type", "product").eq("track_inventory", true).order("name"),
     ]);
     if (mv.error) toast.error(mv.error.message);
-    else setRows((mv.data ?? []) as Movement[]);
+    const movements = (mv.data ?? []) as Movement[];
+    setRows(movements);
     if (it.data) setItems(it.data as ItemOpt[]);
+
+    const userIds = Array.from(new Set(movements.map((m) => m.user_id).filter(Boolean)));
+    if (userIds.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", userIds);
+      const map: ProfileMap = {};
+      for (const p of profs ?? []) map[p.id] = { full_name: p.full_name, email: p.email };
+      setProfiles(map);
+    } else {
+      setProfiles({});
+    }
     setLoading(false);
   }
 
