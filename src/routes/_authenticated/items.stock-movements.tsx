@@ -22,11 +22,13 @@ type Movement = {
   reason: string;
   note: string | null;
   created_at: string;
+  user_id: string;
   items?: { name: string; sku: string | null } | null;
   invoices?: { invoice_number: string } | null;
 };
 
 type ItemOpt = { id: string; name: string };
+type ProfileMap = Record<string, { full_name: string | null; email: string | null }>;
 
 const REASON_LABEL: Record<string, string> = {
   invoice_paid: "Invoice paid",
