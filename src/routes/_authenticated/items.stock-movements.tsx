@@ -22,11 +22,13 @@ type Movement = {
   reason: string;
   note: string | null;
   created_at: string;
+  user_id: string;
   items?: { name: string; sku: string | null } | null;
   invoices?: { invoice_number: string } | null;
 };
 
 type ItemOpt = { id: string; name: string };
+type ProfileMap = Record<string, { full_name: string | null; email: string | null }>;
 
 const REASON_LABEL: Record<string, string> = {
   invoice_paid: "Invoice paid",
@@ -43,6 +45,7 @@ function reasonVariant(r: string): "default" | "secondary" | "destructive" {
 function StockMovementsPage() {
   const [rows, setRows] = useState<Movement[]>([]);
   const [items, setItems] = useState<ItemOpt[]>([]);
+  const [profiles, setProfiles] = useState<ProfileMap>({});
   const [itemFilter, setItemFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
 
@@ -59,8 +62,22 @@ function StockMovementsPage() {
       supabase.from("items").select("id,name").eq("type", "product").eq("track_inventory", true).order("name"),
     ]);
     if (mv.error) toast.error(mv.error.message);
-    else setRows((mv.data ?? []) as Movement[]);
+    const movements = (mv.data ?? []) as Movement[];
+    setRows(movements);
     if (it.data) setItems(it.data as ItemOpt[]);
+
+    const userIds = Array.from(new Set(movements.map((m) => m.user_id).filter(Boolean)));
+    if (userIds.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", userIds);
+      const map: ProfileMap = {};
+      for (const p of profs ?? []) map[p.id] = { full_name: p.full_name, email: p.email };
+      setProfiles(map);
+    } else {
+      setProfiles({});
+    }
     setLoading(false);
   }
 
@@ -71,15 +88,18 @@ function StockMovementsPage() {
       toast.error("Nothing to export");
       return;
     }
-    const headers = ["Date", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
+    const headers = ["Changed at", "Changed by", "Changed by email", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
     const esc = (v: unknown) => {
       const s = v == null ? "" : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
     const lines = [headers.join(",")];
     for (const m of rows) {
+      const p = profiles[m.user_id];
       lines.push([
         new Date(m.created_at).toISOString(),
+        p?.full_name ?? "",
+        p?.email ?? "",
         m.items?.name ?? "",
         m.items?.sku ?? "",
         REASON_LABEL[m.reason] ?? m.reason,
