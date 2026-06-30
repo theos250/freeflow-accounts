@@ -88,15 +88,18 @@ function StockMovementsPage() {
       toast.error("Nothing to export");
       return;
     }
-    const headers = ["Date", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
+    const headers = ["Changed at", "Changed by", "Changed by email", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
     const esc = (v: unknown) => {
       const s = v == null ? "" : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
     const lines = [headers.join(",")];
     for (const m of rows) {
+      const p = profiles[m.user_id];
       lines.push([
         new Date(m.created_at).toISOString(),
+        p?.full_name ?? "",
+        p?.email ?? "",
         m.items?.name ?? "",
         m.items?.sku ?? "",
         REASON_LABEL[m.reason] ?? m.reason,
