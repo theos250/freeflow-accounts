@@ -66,6 +66,41 @@ function StockMovementsPage() {
 
   useEffect(() => { load(); }, [itemFilter]);
 
+  function exportCsv() {
+    if (rows.length === 0) {
+      toast.error("Nothing to export");
+      return;
+    }
+    const headers = ["Date", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
+    const esc = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [headers.join(",")];
+    for (const m of rows) {
+      lines.push([
+        new Date(m.created_at).toISOString(),
+        m.items?.name ?? "",
+        m.items?.sku ?? "",
+        REASON_LABEL[m.reason] ?? m.reason,
+        m.invoices?.invoice_number ?? "",
+        m.note ?? "",
+        Number(m.quantity_change),
+        m.balance_after ?? "",
+      ].map(esc).join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const suffix = itemFilter === "all" ? "all" : (items.find((i) => i.id === itemFilter)?.name ?? "filtered").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    a.href = url;
+    a.download = `stock-movements-${suffix}-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
@@ -73,14 +108,20 @@ function StockMovementsPage() {
           <h1 className="text-3xl font-bold">Stock movements</h1>
           <p className="text-muted-foreground">Audit trail of every inventory change driven by invoices.</p>
         </div>
-        <Select value={itemFilter} onValueChange={setItemFilter}>
-          <SelectTrigger className="w-64"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All tracked products</SelectItem>
-            {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Select value={itemFilter} onValueChange={setItemFilter}>
+            <SelectTrigger className="w-64"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All tracked products</SelectItem>
+              {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" onClick={exportCsv} disabled={loading || rows.length === 0}>
+            <Download className="w-4 h-4 mr-2" /> Export CSV
+          </Button>
+        </div>
       </div>
+
 
       <div className="bg-card border rounded-xl">
         {loading ? (
