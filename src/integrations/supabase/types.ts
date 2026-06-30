@@ -363,15 +363,71 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_movements: {
+        Row: {
+          balance_after: number | null
+          created_at: string
+          id: string
+          invoice_id: string | null
+          item_id: string
+          note: string | null
+          quantity_change: number
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          balance_after?: number | null
+          created_at?: string
+          id?: string
+          invoice_id?: string | null
+          item_id: string
+          note?: string | null
+          quantity_change: number
+          reason: string
+          user_id: string
+        }
+        Update: {
+          balance_after?: number | null
+          created_at?: string
+          id?: string
+          invoice_id?: string | null
+          item_id?: string
+          note?: string | null
+          quantity_change?: number
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      apply_invoice_stock: {
-        Args: { _direction: number; _invoice_id: string }
-        Returns: undefined
-      }
+      apply_invoice_stock:
+        | {
+            Args: { _direction: number; _invoice_id: string }
+            Returns: undefined
+          }
+        | {
+            Args: { _direction: number; _invoice_id: string; _reason?: string }
+            Returns: undefined
+          }
     }
     Enums: {
       [_ in never]: never
