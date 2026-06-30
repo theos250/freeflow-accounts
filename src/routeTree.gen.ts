@@ -29,6 +29,7 @@ import { Route as AuthenticatedSalesCreditNotesRouteImport } from './routes/_aut
 import { Route as AuthenticatedPurchasesVendorsRouteImport } from './routes/_authenticated/purchases.vendors'
 import { Route as AuthenticatedPurchasesOrdersRouteImport } from './routes/_authenticated/purchases.orders'
 import { Route as AuthenticatedPurchasesBillsRouteImport } from './routes/_authenticated/purchases.bills'
+import { Route as AuthenticatedItemsStockMovementsRouteImport } from './routes/_authenticated/items.stock-movements'
 import { Route as AuthenticatedItemsServicesRouteImport } from './routes/_authenticated/items.services'
 import { Route as AuthenticatedItemsProductsRouteImport } from './routes/_authenticated/items.products'
 import { Route as AuthenticatedItemsInventoryRouteImport } from './routes/_authenticated/items.inventory'
@@ -151,6 +152,12 @@ const AuthenticatedPurchasesBillsRoute =
   AuthenticatedPurchasesBillsRouteImport.update({
     id: '/purchases/bills',
     path: '/purchases/bills',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedItemsStockMovementsRoute =
+  AuthenticatedItemsStockMovementsRouteImport.update({
+    id: '/items/stock-movements',
+    path: '/items/stock-movements',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedItemsServicesRoute =
@@ -284,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/items/inventory': typeof AuthenticatedItemsInventoryRoute
   '/items/products': typeof AuthenticatedItemsProductsRoute
   '/items/services': typeof AuthenticatedItemsServicesRoute
+  '/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
   '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -322,6 +330,7 @@ export interface FileRoutesByTo {
   '/items/inventory': typeof AuthenticatedItemsInventoryRoute
   '/items/products': typeof AuthenticatedItemsProductsRoute
   '/items/services': typeof AuthenticatedItemsServicesRoute
+  '/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
   '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -362,6 +371,7 @@ export interface FileRoutesById {
   '/_authenticated/items/inventory': typeof AuthenticatedItemsInventoryRoute
   '/_authenticated/items/products': typeof AuthenticatedItemsProductsRoute
   '/_authenticated/items/services': typeof AuthenticatedItemsServicesRoute
+  '/_authenticated/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
   '/_authenticated/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/_authenticated/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/_authenticated/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/items/inventory'
     | '/items/products'
     | '/items/services'
+    | '/items/stock-movements'
     | '/purchases/bills'
     | '/purchases/orders'
     | '/purchases/vendors'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/items/inventory'
     | '/items/products'
     | '/items/services'
+    | '/items/stock-movements'
     | '/purchases/bills'
     | '/purchases/orders'
     | '/purchases/vendors'
@@ -479,6 +491,7 @@ export interface FileRouteTypes {
     | '/_authenticated/items/inventory'
     | '/_authenticated/items/products'
     | '/_authenticated/items/services'
+    | '/_authenticated/items/stock-movements'
     | '/_authenticated/purchases/bills'
     | '/_authenticated/purchases/orders'
     | '/_authenticated/purchases/vendors'
@@ -638,6 +651,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPurchasesBillsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/items/stock-movements': {
+      id: '/_authenticated/items/stock-movements'
+      path: '/items/stock-movements'
+      fullPath: '/items/stock-movements'
+      preLoaderRoute: typeof AuthenticatedItemsStockMovementsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/items/services': {
       id: '/_authenticated/items/services'
       path: '/items/services'
@@ -786,6 +806,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedItemsInventoryRoute: typeof AuthenticatedItemsInventoryRoute
   AuthenticatedItemsProductsRoute: typeof AuthenticatedItemsProductsRoute
   AuthenticatedItemsServicesRoute: typeof AuthenticatedItemsServicesRoute
+  AuthenticatedItemsStockMovementsRoute: typeof AuthenticatedItemsStockMovementsRoute
   AuthenticatedPurchasesBillsRoute: typeof AuthenticatedPurchasesBillsRoute
   AuthenticatedPurchasesOrdersRoute: typeof AuthenticatedPurchasesOrdersRoute
   AuthenticatedPurchasesVendorsRoute: typeof AuthenticatedPurchasesVendorsRoute
@@ -823,6 +844,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedItemsInventoryRoute: AuthenticatedItemsInventoryRoute,
   AuthenticatedItemsProductsRoute: AuthenticatedItemsProductsRoute,
   AuthenticatedItemsServicesRoute: AuthenticatedItemsServicesRoute,
+  AuthenticatedItemsStockMovementsRoute: AuthenticatedItemsStockMovementsRoute,
   AuthenticatedPurchasesBillsRoute: AuthenticatedPurchasesBillsRoute,
   AuthenticatedPurchasesOrdersRoute: AuthenticatedPurchasesOrdersRoute,
   AuthenticatedPurchasesVendorsRoute: AuthenticatedPurchasesVendorsRoute,
