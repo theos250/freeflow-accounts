@@ -9,11 +9,9 @@ export const Route = createFileRoute("/_authenticated/reports")({
   component: ReportsPage,
 });
 
-function fmt(n: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
-}
-
 function ReportsPage() {
+  const currency = useDefaultCurrency();
+  const fmt = (n: number) => formatCurrency(n, currency);
   const [data, setData] = useState({ revenue: 0, expenses: 0, paid: 0, outstanding: 0, invoiceCount: 0, expenseCount: 0 });
 
   useEffect(() => {
