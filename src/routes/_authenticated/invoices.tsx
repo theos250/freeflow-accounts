@@ -314,6 +314,7 @@ function InvoicesPage() {
                   <TableCell><Badge variant={i.status === "paid" ? "default" : "secondary"}>{i.status}</Badge></TableCell>
                   <TableCell className="text-right">{fmt(Number(i.total), i.currency)}</TableCell>
                   <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => downloadPdf(i)} title="Download PDF"><Download className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => openEdit(i)}><Pencil className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => remove(i.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
