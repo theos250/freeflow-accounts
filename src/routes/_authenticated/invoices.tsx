@@ -234,6 +234,10 @@ function InvoicesPage() {
                   </Select>
                 </div>
               </div>
+              <div>
+                <Label>Currency</Label>
+                <CurrencySelect value={form.currency} onValueChange={(v) => setForm({ ...form, currency: v })} />
+              </div>
 
               <div className="border rounded-lg p-3 space-y-2">
                 <div className="flex items-center justify-between">
