@@ -74,7 +74,7 @@ function InvoicesPage() {
     setForm({
       invoice_number: `INV-${Date.now().toString().slice(-6)}`,
       customer_id: "", issue_date: new Date().toISOString().slice(0, 10),
-      due_date: "", status: "draft", currency: "USD", notes: "",
+      due_date: "", status: "draft", currency: defaultCurrency, notes: "",
     });
     setLines([]);
     setOpen(true);
