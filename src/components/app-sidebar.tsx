@@ -64,7 +64,7 @@ const groups: Group[] = [
   ]},
   { label: "Reports", icon: BarChart3, to: "/reports" },
   { label: "Apps", icon: AppWindow, to: "/apps" },
-  { label: "Companies", icon: Building, to: "/companies" },
+  { label: "Company", icon: Building, to: "/companies" },
 ];
 
 export function AppSidebar() {
