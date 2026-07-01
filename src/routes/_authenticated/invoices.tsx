@@ -169,6 +169,34 @@ function InvoicesPage() {
     load();
   }
 
+  async function downloadPdf(inv: Invoice) {
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return;
+    const [{ data: company }, { data: customer }, { data: lineRows }] = await Promise.all([
+      supabase.from("companies").select("*").eq("user_id", u.user.id).order("created_at").limit(1).maybeSingle(),
+      inv.customer_id ? supabase.from("customers").select("name,email,address").eq("id", inv.customer_id).maybeSingle() : Promise.resolve({ data: null }),
+      supabase.from("invoice_items").select("description,quantity,unit_price,tax_rate").eq("invoice_id", inv.id),
+    ]);
+    let logoSigned: string | null = null;
+    if ((company as any)?.logo_url) {
+      const { data: s } = await supabase.storage.from("company-logos").createSignedUrl((company as any).logo_url, 3600);
+      logoSigned = s?.signedUrl ?? null;
+    }
+    await generateInvoicePdf({
+      invoice: {
+        invoice_number: inv.invoice_number, issue_date: inv.issue_date, due_date: inv.due_date,
+        status: inv.status, currency: inv.currency,
+        subtotal: Number(inv.subtotal), tax: Number(inv.tax), total: Number(inv.total), notes: null,
+      },
+      lines: (lineRows ?? []).map((l: any) => ({
+        description: l.description, quantity: Number(l.quantity),
+        unit_price: Number(l.unit_price), tax_rate: Number(l.tax_rate ?? 0),
+      })),
+      company: company ? { ...(company as any), logo_url: logoSigned } : null,
+      customer: (customer as any) ?? null,
+    });
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
