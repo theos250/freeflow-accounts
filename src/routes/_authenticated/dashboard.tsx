@@ -10,15 +10,13 @@ import {
   ResponsiveContainer, Legend,
 } from "recharts";
 import { Button } from "@/components/ui/button";
+import { useDefaultCurrency } from "@/hooks/use-currency";
+import { formatCurrency } from "@/lib/currencies";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Free Accounting" }] }),
   component: Dashboard,
 });
-
-function fmt(n: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n || 0);
-}
 
 type Inv = { id: string; total: number; status: string; issue_date: string; due_date: string | null; invoice_number: string; created_at: string; customer_id: string | null };
 type Exp = { id: string; amount: number; expense_date: string; vendor: string | null; category: string | null; created_at: string };
