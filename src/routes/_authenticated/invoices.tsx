@@ -8,8 +8,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Download } from "lucide-react";
 import { toast } from "sonner";
+import { CurrencySelect } from "@/components/currency-select";
+import { useDefaultCurrency } from "@/hooks/use-currency";
+import { generateInvoicePdf } from "@/lib/invoice-pdf";
 
 export const Route = createFileRoute("/_authenticated/invoices")({
   head: () => ({ meta: [{ title: "Invoices — Free Accounting" }] }),
@@ -32,6 +35,7 @@ function fmt(n: number, c = "USD") {
 }
 
 function InvoicesPage() {
+  const defaultCurrency = useDefaultCurrency();
   const [items, setItems] = useState<Invoice[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
@@ -39,7 +43,7 @@ function InvoicesPage() {
   const [editing, setEditing] = useState<Invoice | null>(null);
   const [form, setForm] = useState({
     invoice_number: "", customer_id: "", issue_date: new Date().toISOString().slice(0, 10),
-    due_date: "", status: "draft", currency: "USD", notes: "",
+    due_date: "", status: "draft", currency: defaultCurrency, notes: "",
   });
   const [lines, setLines] = useState<Line[]>([]);
 
@@ -70,7 +74,7 @@ function InvoicesPage() {
     setForm({
       invoice_number: `INV-${Date.now().toString().slice(-6)}`,
       customer_id: "", issue_date: new Date().toISOString().slice(0, 10),
-      due_date: "", status: "draft", currency: "USD", notes: "",
+      due_date: "", status: "draft", currency: defaultCurrency, notes: "",
     });
     setLines([]);
     setOpen(true);
@@ -165,6 +169,34 @@ function InvoicesPage() {
     load();
   }
 
+  async function downloadPdf(inv: Invoice) {
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return;
+    const [{ data: company }, { data: customer }, { data: lineRows }] = await Promise.all([
+      supabase.from("companies").select("*").eq("user_id", u.user.id).order("created_at").limit(1).maybeSingle(),
+      inv.customer_id ? supabase.from("customers").select("name,email,address").eq("id", inv.customer_id).maybeSingle() : Promise.resolve({ data: null }),
+      supabase.from("invoice_items").select("description,quantity,unit_price,tax_rate").eq("invoice_id", inv.id),
+    ]);
+    let logoSigned: string | null = null;
+    if ((company as any)?.logo_url) {
+      const { data: s } = await supabase.storage.from("company-logos").createSignedUrl((company as any).logo_url, 3600);
+      logoSigned = s?.signedUrl ?? null;
+    }
+    await generateInvoicePdf({
+      invoice: {
+        invoice_number: inv.invoice_number, issue_date: inv.issue_date, due_date: inv.due_date,
+        status: inv.status, currency: inv.currency,
+        subtotal: Number(inv.subtotal), tax: Number(inv.tax), total: Number(inv.total), notes: null,
+      },
+      lines: (lineRows ?? []).map((l: any) => ({
+        description: l.description, quantity: Number(l.quantity),
+        unit_price: Number(l.unit_price), tax_rate: Number(l.tax_rate ?? 0),
+      })),
+      company: company ? { ...(company as any), logo_url: logoSigned } : null,
+      customer: (customer as any) ?? null,
+    });
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -201,6 +233,10 @@ function InvoicesPage() {
                     <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
+              </div>
+              <div>
+                <Label>Currency</Label>
+                <CurrencySelect value={form.currency} onValueChange={(v) => setForm({ ...form, currency: v })} />
               </div>
 
               <div className="border rounded-lg p-3 space-y-2">
@@ -278,6 +314,7 @@ function InvoicesPage() {
                   <TableCell><Badge variant={i.status === "paid" ? "default" : "secondary"}>{i.status}</Badge></TableCell>
                   <TableCell className="text-right">{fmt(Number(i.total), i.currency)}</TableCell>
                   <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => downloadPdf(i)} title="Download PDF"><Download className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => openEdit(i)}><Pencil className="h-4 w-4" /></Button>
                     <Button variant="ghost" size="icon" onClick={() => remove(i.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>

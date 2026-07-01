@@ -17,36 +17,60 @@ export type Database = {
       companies: {
         Row: {
           address: string | null
+          city: string | null
+          country: string | null
           created_at: string
           currency: string
           email: string | null
           id: string
+          is_default: boolean
+          logo_url: string | null
           name: string
+          phone: string | null
+          postal_code: string | null
+          state: string | null
           tax_number: string | null
           updated_at: string
           user_id: string
+          website: string | null
         }
         Insert: {
           address?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           currency?: string
           email?: string | null
           id?: string
+          is_default?: boolean
+          logo_url?: string | null
           name: string
+          phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           tax_number?: string | null
           updated_at?: string
           user_id: string
+          website?: string | null
         }
         Update: {
           address?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           currency?: string
           email?: string | null
           id?: string
+          is_default?: boolean
+          logo_url?: string | null
           name?: string
+          phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           tax_number?: string | null
           updated_at?: string
           user_id?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -340,6 +364,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          default_currency: string
           email: string | null
           full_name: string | null
           id: string
@@ -348,6 +373,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          default_currency?: string
           email?: string | null
           full_name?: string | null
           id: string
@@ -356,6 +382,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          default_currency?: string
           email?: string | null
           full_name?: string | null
           id?: string

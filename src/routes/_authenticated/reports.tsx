@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useDefaultCurrency } from "@/hooks/use-currency";
+import { formatCurrency } from "@/lib/currencies";
 
 export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({ meta: [{ title: "Reports — Free Accounting" }] }),
   component: ReportsPage,
 });
 
-function fmt(n: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
-}
-
 function ReportsPage() {
+  const currency = useDefaultCurrency();
+  const fmt = (n: number) => formatCurrency(n, currency);
   const [data, setData] = useState({ revenue: 0, expenses: 0, paid: 0, outstanding: 0, invoiceCount: 0, expenseCount: 0 });
 
   useEffect(() => {
