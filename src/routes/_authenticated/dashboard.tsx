@@ -38,6 +38,8 @@ function monthBuckets(months = 6) {
 }
 
 function Dashboard() {
+  const currency = useDefaultCurrency();
+  const fmt = (n: number) => formatCurrency(n, currency, { maximumFractionDigits: 0 });
   const [invoices, setInvoices] = useState<Inv[]>([]);
   const [expenses, setExpenses] = useState<Exp[]>([]);
   const [customers, setCustomers] = useState<{ id: string; name: string }[]>([]);
