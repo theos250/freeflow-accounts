@@ -250,23 +250,17 @@ function InvoicesPage() {
                   </div>
                 </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div><Label>Issue date</Label><Input type="date" value={form.issue_date} onChange={(e) => setForm({ ...form, issue_date: e.target.value })} /></div>
-                <div><Label>Due date</Label><Input type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} /></div>
-                <div>
-                  <Label>Status</Label>
-                  <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <Label>Currency</Label>
-                  <CurrencySelect value={form.currency} onValueChange={(v) => setForm({ ...form, currency: v })} />
-                </div>
-              </div>
+                {lines.length === 0 ? (
+                  <div className="text-sm text-muted-foreground text-center py-6">Add a product or service to get started.</div>
+                ) : (
+                  <div className="space-y-2">
+                    {lines.map((l, i) => {
+                      const amount = (Number(l.quantity) || 0) * (Number(l.unit_price) || 0);
+                      return (
+                        <div key={i} className="grid grid-cols-12 gap-2 items-end">
+                          <div className="col-span-5"><Input placeholder="Description" value={l.description} onChange={(e) => updateLine(i, { description: e.target.value })} /></div>
+                          <div className="col-span-1"><Input type="number" step="0.01" value={l.quantity} onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })} /></div>
+                          <div className="col-span-2"><Input type="number" step="0.01" value={l.unit_price} onChange={(e) => updateLine(i, { unit_price: Number(e.target.value) })} /></div>
                           <div className="col-span-1"><Input type="number" step="0.01" value={l.tax_rate} onChange={(e) => updateLine(i, { tax_rate: Number(e.target.value) })} /></div>
                           <div className="col-span-2 text-right text-sm tabular-nums">{fmt(amount + amount * (l.tax_rate / 100), form.currency)}</div>
                           <div className="col-span-1 text-right"><Button type="button" variant="ghost" size="icon" onClick={() => removeLine(i)}><X className="h-4 w-4" /></Button></div>
