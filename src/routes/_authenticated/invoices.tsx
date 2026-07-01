@@ -35,6 +35,7 @@ function fmt(n: number, c = "USD") {
 }
 
 function InvoicesPage() {
+  const defaultCurrency = useDefaultCurrency();
   const [items, setItems] = useState<Invoice[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
@@ -42,7 +43,7 @@ function InvoicesPage() {
   const [editing, setEditing] = useState<Invoice | null>(null);
   const [form, setForm] = useState({
     invoice_number: "", customer_id: "", issue_date: new Date().toISOString().slice(0, 10),
-    due_date: "", status: "draft", currency: "USD", notes: "",
+    due_date: "", status: "draft", currency: defaultCurrency, notes: "",
   });
   const [lines, setLines] = useState<Line[]>([]);
 
