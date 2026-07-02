@@ -25,7 +25,7 @@ type Invoice = {
   customers?: { name: string } | null;
 };
 type Customer = { id: string; name: string };
-type CatalogItem = { id: string; name: string; price: number; tax_rate: number; type: string };
+type CatalogItem = { id: string; name: string; price: number; tax_rate: number; type: string; stock_quantity: number | null; track_inventory: boolean };
 type Line = { item_id: string | null; description: string; quantity: number; unit_price: number; tax_rate: number };
 
 const STATUSES = ["draft", "sent", "paid", "overdue"];
@@ -51,7 +51,7 @@ function InvoicesPage() {
     const [inv, cust, cat] = await Promise.all([
       supabase.from("invoices").select("*, customers(name)").order("issue_date", { ascending: false }),
       supabase.from("customers").select("id,name").order("name"),
-      supabase.from("items").select("id,name,price,tax_rate,type").eq("is_active", true).order("name"),
+      supabase.from("items").select("id,name,price,tax_rate,type,stock_quantity,track_inventory").eq("is_active", true).order("name"),
     ]);
     if (inv.error) toast.error(inv.error.message); else setItems(inv.data as Invoice[]);
     if (cust.data) setCustomers(cust.data as Customer[]);
