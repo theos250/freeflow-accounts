@@ -43,7 +43,8 @@ function BookkeeperPage() {
     setInput("");
     setLoading(true);
     try {
-      const { reply } = await ask({ data: { messages: next.filter((m) => m.role !== "assistant" || messages.indexOf(m) > 0).map((m) => ({ role: m.role, content: m.content })) } });
+      const history = next.slice(1); // drop initial greeting
+      const { reply } = await ask({ data: { messages: history.map((m) => ({ role: m.role, content: m.content })) } });
       setMessages((m) => [...m, { role: "assistant", content: reply }]);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to reach AI");
