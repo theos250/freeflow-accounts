@@ -247,7 +247,10 @@ function InvoicesPage() {
                       <SelectTrigger className="w-48 h-8"><SelectValue placeholder="+ Add from catalog" /></SelectTrigger>
                       <SelectContent>
                         {catalog.length === 0 && <div className="px-2 py-1.5 text-sm text-muted-foreground">No products/services yet</div>}
-                        {catalog.map((c) => <SelectItem key={c.id} value={c.id}>{c.name} — {fmt(c.price, form.currency)}</SelectItem>)}
+                        {catalog.map((c) => {
+                          const stockLabel = c.type === "product" && c.track_inventory ? ` · stock: ${Number(c.stock_quantity ?? 0)}` : "";
+                          return <SelectItem key={c.id} value={c.id}>{c.name} — {fmt(c.price, form.currency)}{stockLabel}</SelectItem>;
+                        })}
                       </SelectContent>
                     </Select>
                     <Button type="button" size="sm" variant="outline" onClick={addBlank}>+ Blank</Button>
