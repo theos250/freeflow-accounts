@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Sparkles, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles, Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { parseReceipt } from "@/lib/ai-receipts.functions";
+import { categorizeExpenses } from "@/lib/ai-bookkeeper.functions";
 
 export const Route = createFileRoute("/_authenticated/expenses")({
   head: () => ({ meta: [{ title: "Expenses — Free Accounting" }] }),
@@ -39,6 +40,22 @@ function ExpensesPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({ category: "", vendor: "", description: "", amount: "0", expense_date: new Date().toISOString().slice(0, 10), currency: "USD" });
   const runScan = useServerFn(parseReceipt);
+  const runCategorize = useServerFn(categorizeExpenses);
+  const [categorizing, setCategorizing] = useState(false);
+
+  async function autoCategorize() {
+    setCategorizing(true);
+    const t = toast.loading("AI is categorizing uncategorized expenses…");
+    try {
+      const { updated } = await runCategorize({});
+      toast.success(updated > 0 ? `Categorized ${updated} expense${updated > 1 ? "s" : ""}` : "No uncategorized expenses found", { id: t });
+      if (updated > 0) load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to categorize", { id: t });
+    } finally {
+      setCategorizing(false);
+    }
+  }
 
   async function load() {
     const { data, error } = await supabase.from("expenses").select("*").order("expense_date", { ascending: false });
@@ -117,6 +134,10 @@ function ExpensesPage() {
         </div>
         <div className="flex gap-2">
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onScan} />
+          <Button variant="outline" onClick={autoCategorize} disabled={categorizing} className="gap-1.5">
+            {categorizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4 text-primary" />}
+            AI auto-categorize
+          </Button>
           <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={scanning} className="gap-1.5">
             {scanning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-primary" />}
             Scan receipt with AI

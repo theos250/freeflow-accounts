@@ -39,6 +39,7 @@ export type PdfLine = {
   quantity: number;
   unit_price: number;
   tax_rate: number;
+  tax_name?: string | null;
 };
 
 async function loadImageDataUrl(url: string): Promise<{ dataUrl: string; w: number; h: number } | null> {
@@ -76,7 +77,6 @@ export async function generateInvoicePdf(opts: {
   const margin = 40;
   let cursorY = margin;
 
-  // Logo
   if (company?.logo_url) {
     const img = await loadImageDataUrl(company.logo_url);
     if (img && img.w && img.h) {
@@ -87,7 +87,6 @@ export async function generateInvoicePdf(opts: {
     }
   }
 
-  // Company block (right)
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   const rightX = pageWidth - margin;
@@ -108,13 +107,11 @@ export async function generateInvoicePdf(opts: {
 
   cursorY = Math.max(cursorY + 70, ry + 10);
 
-  // Title
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
   doc.text("INVOICE", margin, cursorY);
   cursorY += 8;
 
-  // Meta
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   const metaY = cursorY + 16;
@@ -123,7 +120,6 @@ export async function generateInvoicePdf(opts: {
   if (invoice.due_date) doc.text(`Due date: ${invoice.due_date}`, margin, metaY + 28);
   doc.text(`Status: ${invoice.status.toUpperCase()}`, rightX, metaY, { align: "right" });
 
-  // Bill to
   let billY = metaY + 56;
   doc.setFont("helvetica", "bold");
   doc.text("Bill to", margin, billY);
@@ -135,7 +131,6 @@ export async function generateInvoicePdf(opts: {
     customer.address.split("\n").forEach((l) => { doc.text(l, margin, billY); billY += 12; });
   }
 
-  // Table
   const body = lines.map((l) => {
     const amount = l.quantity * l.unit_price;
     const withTax = amount + amount * (l.tax_rate / 100);
@@ -163,29 +158,66 @@ export async function generateInvoicePdf(opts: {
     margin: { left: margin, right: margin },
   });
 
-  // Totals
-  // @ts-ignore
   const endY = (doc as any).lastAutoTable.finalY + 12;
   const totalsX = pageWidth - margin;
-  const labelX = totalsX - 140;
+  const labelX = totalsX - 180;
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.text("Subtotal", labelX, endY);
   doc.text(formatCurrency(invoice.subtotal, invoice.currency), totalsX, endY, { align: "right" });
-  doc.text("Tax", labelX, endY + 14);
-  doc.text(formatCurrency(invoice.tax, invoice.currency), totalsX, endY + 14, { align: "right" });
+
+  // Tax breakdown by rate/name
+  const taxGroups = new Map<string, { name: string; rate: number; base: number; tax: number }>();
+  for (const l of lines) {
+    const rate = Number(l.tax_rate) || 0;
+    if (rate <= 0) continue;
+    const name = (l.tax_name && l.tax_name.trim()) || `Tax @ ${rate}%`;
+    const key = `${name}|${rate}`;
+    const base = (Number(l.quantity) || 0) * (Number(l.unit_price) || 0);
+    const tax = base * (rate / 100);
+    const g = taxGroups.get(key) ?? { name, rate, base: 0, tax: 0 };
+    g.base += base; g.tax += tax;
+    taxGroups.set(key, g);
+  }
+
+  let ty = endY + 14;
+  if (taxGroups.size === 0) {
+    doc.text("Tax", labelX, ty);
+    doc.text(formatCurrency(invoice.tax, invoice.currency), totalsX, ty, { align: "right" });
+    ty += 14;
+  } else {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text("Tax breakdown", labelX, ty);
+    ty += 12;
+    doc.setFont("helvetica", "normal");
+    for (const g of taxGroups.values()) {
+      const label = `${g.name} (${g.rate}%) on ${formatCurrency(g.base, invoice.currency)}`;
+      const wrapped = doc.splitTextToSize(label, 180);
+      doc.text(wrapped, labelX, ty);
+      doc.text(formatCurrency(g.tax, invoice.currency), totalsX, ty, { align: "right" });
+      ty += 12 * wrapped.length;
+    }
+    doc.setFont("helvetica", "bold");
+    doc.text("Total tax", labelX, ty);
+    doc.text(formatCurrency(invoice.tax, invoice.currency), totalsX, ty, { align: "right" });
+    doc.setFont("helvetica", "normal");
+    ty += 14;
+  }
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
-  doc.text("Total", labelX, endY + 32);
-  doc.text(formatCurrency(invoice.total, invoice.currency), totalsX, endY + 32, { align: "right" });
+  doc.text("Total", labelX, ty + 4);
+  doc.text(formatCurrency(invoice.total, invoice.currency), totalsX, ty + 4, { align: "right" });
 
   if (invoice.notes) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("Notes", margin, endY + 60);
+    doc.text("Notes", margin, ty + 40);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     const wrapped = doc.splitTextToSize(invoice.notes, pageWidth - margin * 2);
-    doc.text(wrapped, margin, endY + 74);
+    doc.text(wrapped, margin, ty + 54);
   }
 
   doc.save(`invoice-${invoice.invoice_number}.pdf`);

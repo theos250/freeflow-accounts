@@ -62,6 +62,7 @@ const groups: Group[] = [
     { label: "General ledger", to: "/accounting/ledger" },
     { label: "Trial balance", to: "/accounting/trial-balance" },
   ]},
+  { label: "AI Bookkeeper", icon: Sparkles, to: "/ai-bookkeeper" },
   { label: "Reports", icon: BarChart3, to: "/reports" },
   { label: "Apps", icon: AppWindow, to: "/apps" },
   { label: "Company", icon: Building, to: "/companies" },

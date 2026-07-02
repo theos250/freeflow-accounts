@@ -25,7 +25,7 @@ type Invoice = {
   customers?: { name: string } | null;
 };
 type Customer = { id: string; name: string };
-type CatalogItem = { id: string; name: string; price: number; tax_rate: number; type: string };
+type CatalogItem = { id: string; name: string; price: number; tax_rate: number; type: string; stock_quantity: number | null; track_inventory: boolean };
 type Line = { item_id: string | null; description: string; quantity: number; unit_price: number; tax_rate: number };
 
 const STATUSES = ["draft", "sent", "paid", "overdue"];
@@ -51,7 +51,7 @@ function InvoicesPage() {
     const [inv, cust, cat] = await Promise.all([
       supabase.from("invoices").select("*, customers(name)").order("issue_date", { ascending: false }),
       supabase.from("customers").select("id,name").order("name"),
-      supabase.from("items").select("id,name,price,tax_rate,type").eq("is_active", true).order("name"),
+      supabase.from("items").select("id,name,price,tax_rate,type,stock_quantity,track_inventory").eq("is_active", true).order("name"),
     ]);
     if (inv.error) toast.error(inv.error.message); else setItems(inv.data as Invoice[]);
     if (cust.data) setCustomers(cust.data as Customer[]);
@@ -247,7 +247,10 @@ function InvoicesPage() {
                       <SelectTrigger className="w-48 h-8"><SelectValue placeholder="+ Add from catalog" /></SelectTrigger>
                       <SelectContent>
                         {catalog.length === 0 && <div className="px-2 py-1.5 text-sm text-muted-foreground">No products/services yet</div>}
-                        {catalog.map((c) => <SelectItem key={c.id} value={c.id}>{c.name} — {fmt(c.price, form.currency)}</SelectItem>)}
+                        {catalog.map((c) => {
+                          const stockLabel = c.type === "product" && c.track_inventory ? ` · stock: ${Number(c.stock_quantity ?? 0)}` : "";
+                          return <SelectItem key={c.id} value={c.id}>{c.name} — {fmt(c.price, form.currency)}{stockLabel}</SelectItem>;
+                        })}
                       </SelectContent>
                     </Select>
                     <Button type="button" size="sm" variant="outline" onClick={addBlank}>+ Blank</Button>
@@ -260,9 +263,20 @@ function InvoicesPage() {
                   <div className="space-y-2">
                     {lines.map((l, i) => {
                       const amount = (Number(l.quantity) || 0) * (Number(l.unit_price) || 0);
+                      const cat = l.item_id ? catalog.find((c) => c.id === l.item_id) : null;
+                      const tracks = cat?.type === "product" && cat.track_inventory;
+                      const stock = tracks ? Number(cat!.stock_quantity ?? 0) : null;
+                      const over = stock !== null && Number(l.quantity) > stock;
                       return (
                         <div key={i} className="grid grid-cols-12 gap-2 items-end">
-                          <div className="col-span-5"><Input placeholder="Description" value={l.description} onChange={(e) => updateLine(i, { description: e.target.value })} /></div>
+                          <div className="col-span-5">
+                            <Input placeholder="Description" value={l.description} onChange={(e) => updateLine(i, { description: e.target.value })} />
+                            {stock !== null && (
+                              <div className={`text-[11px] mt-0.5 ${over ? "text-rose-600" : "text-muted-foreground"}`}>
+                                Stock: {stock}{over ? ` — insufficient (need ${l.quantity})` : ""}
+                              </div>
+                            )}
+                          </div>
                           <div className="col-span-1"><Input type="number" step="0.01" value={l.quantity} onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })} /></div>
                           <div className="col-span-2"><Input type="number" step="0.01" value={l.unit_price} onChange={(e) => updateLine(i, { unit_price: Number(e.target.value) })} /></div>
                           <div className="col-span-1"><Input type="number" step="0.01" value={l.tax_rate} onChange={(e) => updateLine(i, { tax_rate: Number(e.target.value) })} /></div>
