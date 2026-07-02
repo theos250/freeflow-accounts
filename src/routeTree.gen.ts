@@ -22,6 +22,7 @@ import { Route as AuthenticatedCustomersRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCompaniesRouteImport } from './routes/_authenticated/companies'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedAppsRouteImport } from './routes/_authenticated/apps'
+import { Route as AuthenticatedAiBookkeeperRouteImport } from './routes/_authenticated/ai-bookkeeper'
 import { Route as AuthenticatedSalesRecurringRouteImport } from './routes/_authenticated/sales.recurring'
 import { Route as AuthenticatedSalesPaymentsRouteImport } from './routes/_authenticated/sales.payments'
 import { Route as AuthenticatedSalesEstimatesRouteImport } from './routes/_authenticated/sales.estimates'
@@ -112,6 +113,12 @@ const AuthenticatedAppsRoute = AuthenticatedAppsRouteImport.update({
   path: '/apps',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAiBookkeeperRoute =
+  AuthenticatedAiBookkeeperRouteImport.update({
+    id: '/ai-bookkeeper',
+    path: '/ai-bookkeeper',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSalesRecurringRoute =
   AuthenticatedSalesRecurringRouteImport.update({
     id: '/sales/recurring',
@@ -266,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ai-bookkeeper': typeof AuthenticatedAiBookkeeperRoute
   '/apps': typeof AuthenticatedAppsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/companies': typeof AuthenticatedCompaniesRoute
@@ -305,6 +313,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ai-bookkeeper': typeof AuthenticatedAiBookkeeperRoute
   '/apps': typeof AuthenticatedAppsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/companies': typeof AuthenticatedCompaniesRoute
@@ -346,6 +355,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/ai-bookkeeper': typeof AuthenticatedAiBookkeeperRoute
   '/_authenticated/apps': typeof AuthenticatedAppsRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/companies': typeof AuthenticatedCompaniesRoute
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/ai-bookkeeper'
     | '/apps'
     | '/calendar'
     | '/companies'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/ai-bookkeeper'
     | '/apps'
     | '/calendar'
     | '/companies'
@@ -466,6 +478,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/_authenticated/ai-bookkeeper'
     | '/_authenticated/apps'
     | '/_authenticated/calendar'
     | '/_authenticated/companies'
@@ -600,6 +613,13 @@ declare module '@tanstack/react-router' {
       path: '/apps'
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ai-bookkeeper': {
+      id: '/_authenticated/ai-bookkeeper'
+      path: '/ai-bookkeeper'
+      fullPath: '/ai-bookkeeper'
+      preLoaderRoute: typeof AuthenticatedAiBookkeeperRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/recurring': {
@@ -781,6 +801,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAiBookkeeperRoute: typeof AuthenticatedAiBookkeeperRoute
   AuthenticatedAppsRoute: typeof AuthenticatedAppsRoute
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedCompaniesRoute: typeof AuthenticatedCompaniesRoute
@@ -817,6 +838,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAiBookkeeperRoute: AuthenticatedAiBookkeeperRoute,
   AuthenticatedAppsRoute: AuthenticatedAppsRoute,
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedCompaniesRoute: AuthenticatedCompaniesRoute,
