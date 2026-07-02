@@ -113,7 +113,10 @@ function Dashboard() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-          <p className="text-muted-foreground">Here's how your business is performing today.</p>
+          <p className="text-muted-foreground">
+            Here's how your business is performing today.{" "}
+            <span className="text-xs">All figures shown in <span className="font-medium">{currency}</span> at {fxLoading ? "loading" : "live"} FX rates.</span>
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           {quickActions.map((a) => (
