@@ -263,9 +263,20 @@ function InvoicesPage() {
                   <div className="space-y-2">
                     {lines.map((l, i) => {
                       const amount = (Number(l.quantity) || 0) * (Number(l.unit_price) || 0);
+                      const cat = l.item_id ? catalog.find((c) => c.id === l.item_id) : null;
+                      const tracks = cat?.type === "product" && cat.track_inventory;
+                      const stock = tracks ? Number(cat!.stock_quantity ?? 0) : null;
+                      const over = stock !== null && Number(l.quantity) > stock;
                       return (
                         <div key={i} className="grid grid-cols-12 gap-2 items-end">
-                          <div className="col-span-5"><Input placeholder="Description" value={l.description} onChange={(e) => updateLine(i, { description: e.target.value })} /></div>
+                          <div className="col-span-5">
+                            <Input placeholder="Description" value={l.description} onChange={(e) => updateLine(i, { description: e.target.value })} />
+                            {stock !== null && (
+                              <div className={`text-[11px] mt-0.5 ${over ? "text-rose-600" : "text-muted-foreground"}`}>
+                                Stock: {stock}{over ? ` — insufficient (need ${l.quantity})` : ""}
+                              </div>
+                            )}
+                          </div>
                           <div className="col-span-1"><Input type="number" step="0.01" value={l.quantity} onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })} /></div>
                           <div className="col-span-2"><Input type="number" step="0.01" value={l.unit_price} onChange={(e) => updateLine(i, { unit_price: Number(e.target.value) })} /></div>
                           <div className="col-span-1"><Input type="number" step="0.01" value={l.tax_rate} onChange={(e) => updateLine(i, { tax_rate: Number(e.target.value) })} /></div>
