@@ -12,14 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDefaultCurrency } from "@/hooks/use-currency";
 import { formatCurrency } from "@/lib/currencies";
+import { useFxRates } from "@/hooks/use-fx";
+import { convert } from "@/lib/fx";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Free Accounting" }] }),
   component: Dashboard,
 });
 
-type Inv = { id: string; total: number; status: string; issue_date: string; due_date: string | null; invoice_number: string; created_at: string; customer_id: string | null };
-type Exp = { id: string; amount: number; expense_date: string; vendor: string | null; category: string | null; created_at: string };
+type Inv = { id: string; total: number; status: string; issue_date: string; due_date: string | null; invoice_number: string; created_at: string; customer_id: string | null; currency: string };
+type Exp = { id: string; amount: number; expense_date: string; vendor: string | null; category: string | null; created_at: string; currency: string };
 
 function monthBuckets(months = 6) {
   const out: { key: string; label: string; revenue: number; expenses: number }[] = [];
@@ -39,7 +41,9 @@ function monthBuckets(months = 6) {
 
 function Dashboard() {
   const currency = useDefaultCurrency();
+  const { rates, loading: fxLoading } = useFxRates("USD");
   const fmt = (n: number) => formatCurrency(n, currency, { maximumFractionDigits: 0 });
+  const conv = (amount: number, from: string) => convert(amount, from || currency, currency, rates);
   const [invoices, setInvoices] = useState<Inv[]>([]);
   const [expenses, setExpenses] = useState<Exp[]>([]);
   const [customers, setCustomers] = useState<{ id: string; name: string }[]>([]);
@@ -60,13 +64,13 @@ function Dashboard() {
   }, []);
 
   const stats = useMemo(() => {
-    const revenue = invoices.filter((i) => i.status === "paid").reduce((s, i) => s + Number(i.total), 0);
-    const exp = expenses.reduce((s, x) => s + Number(x.amount), 0);
-    const outstanding = invoices.filter((i) => i.status === "sent" || i.status === "overdue").reduce((s, i) => s + Number(i.total), 0);
+    const revenue = invoices.filter((i) => i.status === "paid").reduce((s, i) => s + conv(Number(i.total), i.currency), 0);
+    const exp = expenses.reduce((s, x) => s + conv(Number(x.amount), x.currency), 0);
+    const outstanding = invoices.filter((i) => i.status === "sent" || i.status === "overdue").reduce((s, i) => s + conv(Number(i.total), i.currency), 0);
     const today = new Date().toISOString().slice(0, 10);
-    const overdue = invoices.filter((i) => i.status !== "paid" && i.due_date && i.due_date < today).reduce((s, i) => s + Number(i.total), 0);
+    const overdue = invoices.filter((i) => i.status !== "paid" && i.due_date && i.due_date < today).reduce((s, i) => s + conv(Number(i.total), i.currency), 0);
     return { revenue, expenses: exp, profit: revenue - exp, cash: revenue - exp, outstanding, overdue };
-  }, [invoices, expenses]);
+  }, [invoices, expenses, rates, currency]);
 
   const trend = useMemo(() => {
     const b = monthBuckets(6);
@@ -75,15 +79,15 @@ function Dashboard() {
       if (i.status !== "paid") continue;
       const k = i.issue_date.slice(0, 7);
       const j = idx.get(k);
-      if (j !== undefined) b[j].revenue += Number(i.total);
+      if (j !== undefined) b[j].revenue += conv(Number(i.total), i.currency);
     }
     for (const e of expenses) {
       const k = e.expense_date.slice(0, 7);
       const j = idx.get(k);
-      if (j !== undefined) b[j].expenses += Number(e.amount);
+      if (j !== undefined) b[j].expenses += conv(Number(e.amount), e.currency);
     }
     return b.map((x) => ({ ...x, cashflow: x.revenue - x.expenses }));
-  }, [invoices, expenses]);
+  }, [invoices, expenses, rates, currency]);
 
   const customerMap = useMemo(() => new Map(customers.map((c) => [c.id, c.name])), [customers]);
 
