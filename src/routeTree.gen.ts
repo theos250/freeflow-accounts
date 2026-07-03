@@ -14,6 +14,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/sync'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
@@ -48,6 +49,7 @@ import { Route as AuthenticatedAccountingTrialBalanceRouteImport } from './route
 import { Route as AuthenticatedAccountingLedgerRouteImport } from './routes/_authenticated/accounting.ledger'
 import { Route as AuthenticatedAccountingJournalsRouteImport } from './routes/_authenticated/accounting.journals'
 import { Route as AuthenticatedAccountingChartRouteImport } from './routes/_authenticated/accounting.chart'
+import { Route as ApiPublicHooksSyncExternalRouteImport } from './routes/api/public/hooks/sync-external'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -72,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSyncRoute = AuthenticatedSyncRouteImport.update({
+  id: '/sync',
+  path: '/sync',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   id: '/reports',
@@ -267,6 +274,12 @@ const AuthenticatedAccountingChartRoute =
     path: '/accounting/chart',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicHooksSyncExternalRoute =
+  ApiPublicHooksSyncExternalRouteImport.update({
+    id: '/api/public/hooks/sync-external',
+    path: '/api/public/hooks/sync-external',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -282,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/sync': typeof AuthenticatedSyncRoute
   '/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
   '/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
@@ -307,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
   '/sales/payments': typeof AuthenticatedSalesPaymentsRoute
   '/sales/recurring': typeof AuthenticatedSalesRecurringRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -322,6 +337,7 @@ export interface FileRoutesByTo {
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/sync': typeof AuthenticatedSyncRoute
   '/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
   '/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
@@ -347,6 +363,7 @@ export interface FileRoutesByTo {
   '/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
   '/sales/payments': typeof AuthenticatedSalesPaymentsRoute
   '/sales/recurring': typeof AuthenticatedSalesRecurringRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -364,6 +381,7 @@ export interface FileRoutesById {
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/_authenticated/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/_authenticated/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
   '/_authenticated/accounting/ledger': typeof AuthenticatedAccountingLedgerRoute
@@ -389,6 +407,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/estimates': typeof AuthenticatedSalesEstimatesRoute
   '/_authenticated/sales/payments': typeof AuthenticatedSalesPaymentsRoute
   '/_authenticated/sales/recurring': typeof AuthenticatedSalesRecurringRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -406,6 +425,7 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/sync'
     | '/accounting/chart'
     | '/accounting/journals'
     | '/accounting/ledger'
@@ -431,6 +451,7 @@ export interface FileRouteTypes {
     | '/sales/estimates'
     | '/sales/payments'
     | '/sales/recurring'
+    | '/api/public/hooks/sync-external'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -446,6 +467,7 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/sync'
     | '/accounting/chart'
     | '/accounting/journals'
     | '/accounting/ledger'
@@ -471,6 +493,7 @@ export interface FileRouteTypes {
     | '/sales/estimates'
     | '/sales/payments'
     | '/sales/recurring'
+    | '/api/public/hooks/sync-external'
   id:
     | '__root__'
     | '/'
@@ -487,6 +510,7 @@ export interface FileRouteTypes {
     | '/_authenticated/expenses'
     | '/_authenticated/invoices'
     | '/_authenticated/reports'
+    | '/_authenticated/sync'
     | '/_authenticated/accounting/chart'
     | '/_authenticated/accounting/journals'
     | '/_authenticated/accounting/ledger'
@@ -512,6 +536,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/estimates'
     | '/_authenticated/sales/payments'
     | '/_authenticated/sales/recurring'
+    | '/api/public/hooks/sync-external'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -520,6 +545,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicHooksSyncExternalRoute: typeof ApiPublicHooksSyncExternalRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -558,6 +584,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sync': {
+      id: '/_authenticated/sync'
+      path: '/sync'
+      fullPath: '/sync'
+      preLoaderRoute: typeof AuthenticatedSyncRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reports': {
       id: '/_authenticated/reports'
@@ -797,6 +830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountingChartRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/hooks/sync-external': {
+      id: '/api/public/hooks/sync-external'
+      path: '/api/public/hooks/sync-external'
+      fullPath: '/api/public/hooks/sync-external'
+      preLoaderRoute: typeof ApiPublicHooksSyncExternalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -810,6 +850,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
   AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedAccountingChartRoute: typeof AuthenticatedAccountingChartRoute
   AuthenticatedAccountingJournalsRoute: typeof AuthenticatedAccountingJournalsRoute
   AuthenticatedAccountingLedgerRoute: typeof AuthenticatedAccountingLedgerRoute
@@ -847,6 +888,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
   AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedAccountingChartRoute: AuthenticatedAccountingChartRoute,
   AuthenticatedAccountingJournalsRoute: AuthenticatedAccountingJournalsRoute,
   AuthenticatedAccountingLedgerRoute: AuthenticatedAccountingLedgerRoute,
@@ -885,17 +927,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicHooksSyncExternalRoute: ApiPublicHooksSyncExternalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
