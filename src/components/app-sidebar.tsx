@@ -66,6 +66,7 @@ const groups: Group[] = [
   { label: "Reports", icon: BarChart3, to: "/reports" },
   { label: "Apps", icon: AppWindow, to: "/apps" },
   { label: "Company", icon: Building, to: "/companies" },
+  { label: "External Sync", icon: Database, to: "/sync" },
 ];
 
 export function AppSidebar() {
