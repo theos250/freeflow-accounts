@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, FileText, Users, Receipt, BarChart3, LogOut, Package,
   ShoppingCart, Building2, Briefcase, Landmark, Calendar, BookOpen,
-  AppWindow, Building, ChevronDown, Sparkles,
+  AppWindow, Building, ChevronDown, Sparkles, Database,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
