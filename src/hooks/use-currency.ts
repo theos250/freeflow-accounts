@@ -19,12 +19,18 @@ export function useDefaultCurrency() {
       (async () => {
         const { data: u } = await supabase.auth.getUser();
         if (!u.user) return;
-        const { data } = await supabase.from("profiles").select("default_currency").eq("id", u.user.id).maybeSingle();
+        const { data } = await supabase
+          .from("profiles")
+          .select("default_currency")
+          .eq("id", u.user.id)
+          .maybeSingle();
         const code = (data?.default_currency as string) || "USD";
         setDefaultCurrency(code);
       })();
     }
-    return () => { listeners.delete(listener); };
+    return () => {
+      listeners.delete(listener);
+    };
   }, []);
 
   return currency;

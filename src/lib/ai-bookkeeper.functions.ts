@@ -2,7 +2,19 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
-const CATEGORIES = ["Meals", "Travel", "Software", "Office", "Utilities", "Marketing", "Equipment", "Payroll", "Rent", "Professional Services", "Other"];
+const CATEGORIES = [
+  "Meals",
+  "Travel",
+  "Software",
+  "Office",
+  "Utilities",
+  "Marketing",
+  "Equipment",
+  "Payroll",
+  "Rent",
+  "Professional Services",
+  "Other",
+];
 
 async function callGemini(messages: any[], key: string) {
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -37,8 +49,16 @@ export const askBookkeeper = createServerFn({ method: "POST" })
     const { supabase } = context;
 
     const [inv, exp, cust, items] = await Promise.all([
-      supabase.from("invoices").select("invoice_number,status,total,currency,issue_date,due_date,customer_id").order("issue_date", { ascending: false }).limit(200),
-      supabase.from("expenses").select("vendor,category,amount,currency,expense_date").order("expense_date", { ascending: false }).limit(200),
+      supabase
+        .from("invoices")
+        .select("invoice_number,status,total,currency,issue_date,due_date,customer_id")
+        .order("issue_date", { ascending: false })
+        .limit(200),
+      supabase
+        .from("expenses")
+        .select("vendor,category,amount,currency,expense_date")
+        .order("expense_date", { ascending: false })
+        .limit(200),
       supabase.from("customers").select("id,name,email").limit(200),
       supabase.from("items").select("name,type,price,stock_quantity,track_inventory").limit(200),
     ]);
@@ -52,10 +72,7 @@ export const askBookkeeper = createServerFn({ method: "POST" })
 
     const system = `You are an AI bookkeeper for a small business. Use the JSON dataset below to answer questions concisely with concrete numbers. Compute revenue, profit, top customers, category spend, cash trends, overdue invoices, or inventory as needed. Format money with the invoice/expense currency. Be brief and useful. If data is missing, say so.\n\nDATA:\n${JSON.stringify(summary).slice(0, 60000)}`;
 
-    const text = await callGemini(
-      [{ role: "system", content: system }, ...data.messages],
-      key,
-    );
+    const text = await callGemini([{ role: "system", content: system }, ...data.messages], key);
     return { reply: text };
   });
 
@@ -77,7 +94,9 @@ export const categorizeExpenses = createServerFn({ method: "POST" })
     const text = await callGemini([{ role: "user", content: prompt }], key);
     const cleaned = text.replace(/```json\s*|```/g, "").trim();
     let parsed: { id: string; category: string }[] = [];
-    try { parsed = JSON.parse(cleaned); } catch {
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch {
       const m = cleaned.match(/\[[\s\S]*\]/);
       if (m) parsed = JSON.parse(m[0]);
     }

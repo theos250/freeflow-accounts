@@ -5,8 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,7 +41,9 @@ function CategoriesPage() {
     if (error) return toast.error(error.message);
     setItems(data as Category[]);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   function openNew() {
     setEditing(null);
@@ -68,25 +83,55 @@ function CategoriesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Categories</h1>
-          <p className="text-muted-foreground">Group products and services for reporting and inventory.</p>
+          <p className="text-muted-foreground">
+            Group products and services for reporting and inventory.
+          </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew} className="bg-gradient-hero"><Plus className="h-4 w-4" /> New category</Button>
+            <Button onClick={openNew} className="bg-gradient-hero">
+              <Plus className="h-4 w-4" /> New category
+            </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>{editing ? "Edit category" : "New category"}</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>{editing ? "Edit category" : "New category"}</DialogTitle>
+            </DialogHeader>
             <form onSubmit={save} className="space-y-3">
-              <div><Label>Name</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div><Label>Description</Label><Textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+              <div>
+                <Label>Name</Label>
+                <Input
+                  required
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Description</Label>
+                <Textarea
+                  rows={2}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                />
+              </div>
               <div>
                 <Label>Color</Label>
                 <div className="flex gap-2 items-center">
-                  <Input type="color" className="w-16 h-10 p-1" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
-                  <Input value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
+                  <Input
+                    type="color"
+                    className="w-16 h-10 p-1"
+                    value={form.color}
+                    onChange={(e) => setForm({ ...form, color: e.target.value })}
+                  />
+                  <Input
+                    value={form.color}
+                    onChange={(e) => setForm({ ...form, color: e.target.value })}
+                  />
                 </div>
               </div>
-              <Button type="submit" className="w-full bg-gradient-hero">Save</Button>
+              <Button type="submit" className="w-full bg-gradient-hero">
+                Save
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -98,17 +143,31 @@ function CategoriesPage() {
         ) : (
           <Table>
             <TableHeader>
-              <TableRow><TableHead className="w-12"></TableHead><TableHead>Name</TableHead><TableHead>Description</TableHead><TableHead className="w-24"></TableHead></TableRow>
+              <TableRow>
+                <TableHead className="w-12"></TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="w-24"></TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((c) => (
                 <TableRow key={c.id}>
-                  <TableCell><span className="inline-block w-4 h-4 rounded-full border" style={{ backgroundColor: c.color ?? "#2563EB" }} /></TableCell>
+                  <TableCell>
+                    <span
+                      className="inline-block w-4 h-4 rounded-full border"
+                      style={{ backgroundColor: c.color ?? "#2563EB" }}
+                    />
+                  </TableCell>
                   <TableCell className="font-medium">{c.name}</TableCell>
                   <TableCell className="text-muted-foreground">{c.description ?? "—"}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => openEdit(c)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove(c.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

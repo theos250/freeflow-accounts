@@ -1,10 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
 
@@ -59,7 +72,12 @@ function StockMovementsPage() {
     if (itemFilter !== "all") q = q.eq("item_id", itemFilter);
     const [mv, it] = await Promise.all([
       q,
-      supabase.from("items").select("id,name").eq("type", "product").eq("track_inventory", true).order("name"),
+      supabase
+        .from("items")
+        .select("id,name")
+        .eq("type", "product")
+        .eq("track_inventory", true)
+        .order("name"),
     ]);
     if (mv.error) toast.error(mv.error.message);
     const movements = (mv.data ?? []) as Movement[];
@@ -81,14 +99,27 @@ function StockMovementsPage() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, [itemFilter]);
+  useEffect(() => {
+    load();
+  }, [itemFilter]);
 
   function exportCsv() {
     if (rows.length === 0) {
       toast.error("Nothing to export");
       return;
     }
-    const headers = ["Changed at", "Changed by", "Changed by email", "Product", "SKU", "Reason", "Reference", "Note", "Change", "Balance after"];
+    const headers = [
+      "Changed at",
+      "Changed by",
+      "Changed by email",
+      "Product",
+      "SKU",
+      "Reason",
+      "Reference",
+      "Note",
+      "Change",
+      "Balance after",
+    ];
     const esc = (v: unknown) => {
       const s = v == null ? "" : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -96,23 +127,32 @@ function StockMovementsPage() {
     const lines = [headers.join(",")];
     for (const m of rows) {
       const p = profiles[m.user_id];
-      lines.push([
-        new Date(m.created_at).toISOString(),
-        p?.full_name ?? "",
-        p?.email ?? "",
-        m.items?.name ?? "",
-        m.items?.sku ?? "",
-        REASON_LABEL[m.reason] ?? m.reason,
-        m.invoices?.invoice_number ?? "",
-        m.note ?? "",
-        Number(m.quantity_change),
-        m.balance_after ?? "",
-      ].map(esc).join(","));
+      lines.push(
+        [
+          new Date(m.created_at).toISOString(),
+          p?.full_name ?? "",
+          p?.email ?? "",
+          m.items?.name ?? "",
+          m.items?.sku ?? "",
+          REASON_LABEL[m.reason] ?? m.reason,
+          m.invoices?.invoice_number ?? "",
+          m.note ?? "",
+          Number(m.quantity_change),
+          m.balance_after ?? "",
+        ]
+          .map(esc)
+          .join(","),
+      );
     }
     const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const suffix = itemFilter === "all" ? "all" : (items.find((i) => i.id === itemFilter)?.name ?? "filtered").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    const suffix =
+      itemFilter === "all"
+        ? "all"
+        : (items.find((i) => i.id === itemFilter)?.name ?? "filtered")
+            .replace(/[^a-z0-9]+/gi, "-")
+            .toLowerCase();
     a.href = url;
     a.download = `stock-movements-${suffix}-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a);
@@ -126,14 +166,22 @@ function StockMovementsPage() {
       <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold">Stock movements</h1>
-          <p className="text-muted-foreground">Audit trail of every inventory change driven by invoices.</p>
+          <p className="text-muted-foreground">
+            Audit trail of every inventory change driven by invoices.
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Select value={itemFilter} onValueChange={setItemFilter}>
-            <SelectTrigger className="w-64"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-64">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All tracked products</SelectItem>
-              {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
+              {items.map((i) => (
+                <SelectItem key={i.id} value={i.id}>
+                  {i.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Button variant="outline" onClick={exportCsv} disabled={loading || rows.length === 0}>
@@ -142,13 +190,13 @@ function StockMovementsPage() {
         </div>
       </div>
 
-
       <div className="bg-card border rounded-xl">
         {loading ? (
           <div className="p-12 text-center text-muted-foreground">Loading…</div>
         ) : rows.length === 0 ? (
           <div className="p-12 text-center text-muted-foreground">
-            No stock movements yet. They appear automatically when a tracked product's invoice is marked paid.
+            No stock movements yet. They appear automatically when a tracked product's invoice is
+            marked paid.
           </div>
         ) : (
           <Table>
@@ -172,13 +220,22 @@ function StockMovementsPage() {
                     </TableCell>
                     <TableCell className="font-medium">{m.items?.name ?? "—"}</TableCell>
                     <TableCell>
-                      <Badge variant={reasonVariant(m.reason)}>{REASON_LABEL[m.reason] ?? m.reason}</Badge>
+                      <Badge variant={reasonVariant(m.reason)}>
+                        {REASON_LABEL[m.reason] ?? m.reason}
+                      </Badge>
                     </TableCell>
-                    <TableCell className="text-sm">{m.invoices?.invoice_number ?? m.note ?? "—"}</TableCell>
-                    <TableCell className={`text-right tabular-nums font-medium ${positive ? "text-emerald-600" : "text-red-600"}`}>
-                      {positive ? "+" : ""}{Number(m.quantity_change)}
+                    <TableCell className="text-sm">
+                      {m.invoices?.invoice_number ?? m.note ?? "—"}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">{m.balance_after ?? "—"}</TableCell>
+                    <TableCell
+                      className={`text-right tabular-nums font-medium ${positive ? "text-emerald-600" : "text-red-600"}`}
+                    >
+                      {positive ? "+" : ""}
+                      {Number(m.quantity_change)}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {m.balance_after ?? "—"}
+                    </TableCell>
                   </TableRow>
                 );
               })}

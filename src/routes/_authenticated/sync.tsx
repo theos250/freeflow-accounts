@@ -40,7 +40,8 @@ function SyncPage() {
         <div>
           <h1 className="text-2xl font-semibold">External Supabase Sync</h1>
           <p className="text-sm text-muted-foreground">
-            Mirrors customers, items, invoices, invoice items, and expenses to your external Supabase project.
+            Mirrors customers, items, invoices, invoice items, and expenses to your external
+            Supabase project.
           </p>
         </div>
       </div>
@@ -51,12 +52,18 @@ function SyncPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Button onClick={trigger} disabled={busy}>
-            {busy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+            {busy ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4 mr-2" />
+            )}
             Sync now
           </Button>
           {last && (
             <div className="text-sm border rounded-lg divide-y">
-              <div className="px-3 py-2 text-muted-foreground">Last sync: {new Date(last.syncedAt).toLocaleString()}</div>
+              <div className="px-3 py-2 text-muted-foreground">
+                Last sync: {new Date(last.syncedAt).toLocaleString()}
+              </div>
               {Object.entries(last.results).map(([table, r]) => (
                 <div key={table} className="px-3 py-2 flex justify-between">
                   <span className="font-mono">{table}</span>

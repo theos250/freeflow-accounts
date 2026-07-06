@@ -12,7 +12,14 @@ export const Route = createFileRoute("/_authenticated/reports")({
 function ReportsPage() {
   const currency = useDefaultCurrency();
   const fmt = (n: number) => formatCurrency(n, currency);
-  const [data, setData] = useState({ revenue: 0, expenses: 0, paid: 0, outstanding: 0, invoiceCount: 0, expenseCount: 0 });
+  const [data, setData] = useState({
+    revenue: 0,
+    expenses: 0,
+    paid: 0,
+    outstanding: 0,
+    invoiceCount: 0,
+    expenseCount: 0,
+  });
 
   useEffect(() => {
     (async () => {
@@ -22,11 +29,22 @@ function ReportsPage() {
       ]);
       const invoices = inv.data ?? [];
       const expenses = exp.data ?? [];
-      const paid = invoices.filter((i) => i.status === "paid").reduce((s, i) => s + Number(i.total), 0);
-      const outstanding = invoices.filter((i) => i.status !== "paid" && i.status !== "draft").reduce((s, i) => s + Number(i.total), 0);
+      const paid = invoices
+        .filter((i) => i.status === "paid")
+        .reduce((s, i) => s + Number(i.total), 0);
+      const outstanding = invoices
+        .filter((i) => i.status !== "paid" && i.status !== "draft")
+        .reduce((s, i) => s + Number(i.total), 0);
       const revenue = paid;
       const expTotal = expenses.reduce((s, e) => s + Number(e.amount), 0);
-      setData({ revenue, expenses: expTotal, paid, outstanding, invoiceCount: invoices.length, expenseCount: expenses.length });
+      setData({
+        revenue,
+        expenses: expTotal,
+        paid,
+        outstanding,
+        invoiceCount: invoices.length,
+        expenseCount: expenses.length,
+      });
     })();
   }, []);
 

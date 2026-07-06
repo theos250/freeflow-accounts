@@ -49,7 +49,8 @@ export const parseReceipt = createServerFn({ method: "POST" })
     if (!res.ok) {
       const body = await res.text();
       if (res.status === 429) throw new Error("AI rate limit reached. Please retry in a moment.");
-      if (res.status === 402) throw new Error("AI credits exhausted. Upgrade your plan to continue scanning receipts.");
+      if (res.status === 402)
+        throw new Error("AI credits exhausted. Upgrade your plan to continue scanning receipts.");
       throw new Error(`AI gateway error (${res.status}): ${body.slice(0, 200)}`);
     }
 

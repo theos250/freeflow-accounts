@@ -21,20 +21,37 @@ export async function getRates(base = "USD"): Promise<Cache> {
       const raw = localStorage.getItem(CACHE_KEY);
       if (raw) {
         const c = JSON.parse(raw) as Cache;
-        if (c.base === base && Date.now() - c.ts < TTL_MS && c.rates && Object.keys(c.rates).length > 5) return c;
+        if (
+          c.base === base &&
+          Date.now() - c.ts < TTL_MS &&
+          c.rates &&
+          Object.keys(c.rates).length > 5
+        )
+          return c;
       }
     } catch {}
   }
   if (!inflight) {
-    inflight = fetchRates(base).then((c) => {
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)); } catch {}
-      return c;
-    }).finally(() => { inflight = null; });
+    inflight = fetchRates(base)
+      .then((c) => {
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(c));
+        } catch {}
+        return c;
+      })
+      .finally(() => {
+        inflight = null;
+      });
   }
   return inflight;
 }
 
-export function convert(amount: number, from: string, to: string, rates: Record<string, number>): number {
+export function convert(
+  amount: number,
+  from: string,
+  to: string,
+  rates: Record<string, number>,
+): number {
   if (!amount || from === to) return amount || 0;
   const rFrom = rates[from];
   const rTo = rates[to];
