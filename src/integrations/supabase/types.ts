@@ -64,6 +64,195 @@ export type Database = {
           },
         ]
       }
+      bill_items: {
+        Row: {
+          account_id: string | null
+          amount: number
+          bill_id: string
+          created_at: string
+          description: string
+          id: string
+          item_id: string | null
+          quantity: number
+          tax_rate: number
+          unit_price: number
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number
+          bill_id: string
+          created_at?: string
+          description: string
+          id?: string
+          item_id?: string | null
+          quantity?: number
+          tax_rate?: number
+          unit_price?: number
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          bill_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          item_id?: string | null
+          quantity?: number
+          tax_rate?: number
+          unit_price?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_items_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bill_items_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bill_payments: {
+        Row: {
+          amount: number
+          bill_id: string
+          created_at: string
+          currency: string
+          id: string
+          method: string
+          notes: string | null
+          payment_date: string
+          reference: string | null
+          source_account_id: string | null
+          updated_at: string
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          amount: number
+          bill_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          payment_date?: string
+          reference?: string | null
+          source_account_id?: string | null
+          updated_at?: string
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number
+          bill_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          payment_date?: string
+          reference?: string | null
+          source_account_id?: string | null
+          updated_at?: string
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_payments_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bill_payments_source_account_id_fkey"
+            columns: ["source_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bill_payments_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bills: {
+        Row: {
+          bill_number: string
+          created_at: string
+          currency: string
+          due_date: string | null
+          id: string
+          issue_date: string
+          notes: string | null
+          reference: string | null
+          status: string
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          bill_number: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          reference?: string | null
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          bill_number?: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          reference?: string | null
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           address: string | null
@@ -780,6 +969,132 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_order_items: {
+        Row: {
+          account_id: string | null
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          item_id: string | null
+          po_id: string
+          quantity: number
+          tax_rate: number
+          unit_price: number
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number
+          created_at?: string
+          description: string
+          id?: string
+          item_id?: string | null
+          po_id: string
+          quantity?: number
+          tax_rate?: number
+          unit_price?: number
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          item_id?: string | null
+          po_id?: string
+          quantity?: number
+          tax_rate?: number
+          unit_price?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_items_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_order_items_po_id_fkey"
+            columns: ["po_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase_orders: {
+        Row: {
+          converted_bill_id: string | null
+          created_at: string
+          currency: string
+          expected_date: string | null
+          id: string
+          notes: string | null
+          order_date: string
+          po_number: string
+          status: string
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          converted_bill_id?: string | null
+          created_at?: string
+          currency?: string
+          expected_date?: string | null
+          id?: string
+          notes?: string | null
+          order_date?: string
+          po_number: string
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          converted_bill_id?: string | null
+          created_at?: string
+          currency?: string
+          expected_date?: string | null
+          id?: string
+          notes?: string | null
+          order_date?: string
+          po_number?: string
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_converted_bill_id_fkey"
+            columns: ["converted_bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_orders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recurring_invoices: {
         Row: {
           created_at: string
@@ -885,6 +1200,51 @@ export type Database = {
           },
         ]
       }
+      vendors: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_1099: boolean
+          name: string
+          notes: string | null
+          payment_terms: number
+          phone: string | null
+          tax_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_1099?: boolean
+          name: string
+          notes?: string | null
+          payment_terms?: number
+          phone?: string | null
+          tax_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_1099?: boolean
+          name?: string
+          notes?: string | null
+          payment_terms?: number
+          phone?: string | null
+          tax_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -903,11 +1263,17 @@ export type Database = {
         Args: { _code: string; _user_id: string }
         Returns: string
       }
+      post_bill_journal: { Args: { _bill_id: string }; Returns: undefined }
+      post_bill_payment_journal: {
+        Args: { _pay_id: string }
+        Returns: undefined
+      }
       post_credit_note_journal: { Args: { _cn_id: string }; Returns: undefined }
       post_payment_journal: {
         Args: { _payment_id: string }
         Returns: undefined
       }
+      recalc_bill_status: { Args: { _bill_id: string }; Returns: undefined }
       recalc_invoice_status: {
         Args: { _invoice_id: string }
         Returns: undefined
