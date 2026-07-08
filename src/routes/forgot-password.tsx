@@ -32,14 +32,24 @@ function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-subtle px-4">
       <div className="w-full max-w-md bg-card border rounded-2xl shadow-elevated p-8">
         <h1 className="text-2xl font-bold mb-2">Reset password</h1>
-        <p className="text-sm text-muted-foreground mb-6">We'll email you a link to set a new password.</p>
+        <p className="text-sm text-muted-foreground mb-6">
+          We'll email you a link to set a new password.
+        </p>
         {sent ? (
-          <p className="text-sm">Check your inbox at <strong>{email}</strong>.</p>
+          <p className="text-sm">
+            Check your inbox at <strong>{email}</strong>.
+          </p>
         ) : (
           <form onSubmit={handle} className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <Button type="submit" disabled={loading} className="w-full bg-gradient-hero">
               {loading ? "Sending…" : "Send reset link"}
@@ -47,7 +57,9 @@ function ForgotPassword() {
           </form>
         )}
         <div className="mt-4 text-sm text-center">
-          <Link to="/auth" search={{ mode: "login" }} className="text-primary hover:underline">Back to sign in</Link>
+          <Link to="/auth" search={{ mode: "login" }} className="text-primary hover:underline">
+            Back to sign in
+          </Link>
         </div>
       </div>
     </div>

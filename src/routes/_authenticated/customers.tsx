@@ -4,8 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,7 +27,13 @@ export const Route = createFileRoute("/_authenticated/customers")({
   component: CustomersPage,
 });
 
-type Customer = { id: string; name: string; email: string | null; phone: string | null; address: string | null };
+type Customer = {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+};
 
 function CustomersPage() {
   const [items, setItems] = useState<Customer[]>([]);
@@ -23,11 +42,16 @@ function CustomersPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "" });
 
   async function load() {
-    const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("customers")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (error) return toast.error(error.message);
     setItems(data as Customer[]);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   function openNew() {
     setEditing(null);
@@ -71,16 +95,48 @@ function CustomersPage() {
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew} className="bg-gradient-hero"><Plus className="h-4 w-4" /> New customer</Button>
+            <Button onClick={openNew} className="bg-gradient-hero">
+              <Plus className="h-4 w-4" /> New customer
+            </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>{editing ? "Edit customer" : "New customer"}</DialogTitle></DialogHeader>
+            <DialogHeader>
+              <DialogTitle>{editing ? "Edit customer" : "New customer"}</DialogTitle>
+            </DialogHeader>
             <form onSubmit={save} className="space-y-3">
-              <div><Label>Name</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div><Label>Email</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
-              <div><Label>Phone</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
-              <div><Label>Address</Label><Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></div>
-              <Button type="submit" className="w-full bg-gradient-hero">Save</Button>
+              <div>
+                <Label>Name</Label>
+                <Input
+                  required
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Phone</Label>
+                <Input
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Address</Label>
+                <Input
+                  value={form.address}
+                  onChange={(e) => setForm({ ...form, address: e.target.value })}
+                />
+              </div>
+              <Button type="submit" className="w-full bg-gradient-hero">
+                Save
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -88,11 +144,18 @@ function CustomersPage() {
 
       <div className="bg-card border rounded-xl">
         {items.length === 0 ? (
-          <div className="p-12 text-center text-muted-foreground">No customers yet. Click "New customer" to add one.</div>
+          <div className="p-12 text-center text-muted-foreground">
+            No customers yet. Click "New customer" to add one.
+          </div>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow><TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead className="w-32"></TableHead></TableRow>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead className="w-32"></TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((c) => (
@@ -101,8 +164,12 @@ function CustomersPage() {
                   <TableCell>{c.email}</TableCell>
                   <TableCell>{c.phone}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => openEdit(c)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove(c.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

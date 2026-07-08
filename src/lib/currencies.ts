@@ -55,9 +55,15 @@ export const CURRENCIES: Currency[] = [
   { code: "PEN", name: "Peruvian Sol", symbol: "S/" },
 ];
 
-export function formatCurrency(amount: number, currency = "USD", opts: Intl.NumberFormatOptions = {}) {
+export function formatCurrency(
+  amount: number,
+  currency = "USD",
+  opts: Intl.NumberFormatOptions = {},
+) {
   try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency, ...opts }).format(amount || 0);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency, ...opts }).format(
+      amount || 0,
+    );
   } catch {
     return `${currency} ${(amount || 0).toFixed(2)}`;
   }

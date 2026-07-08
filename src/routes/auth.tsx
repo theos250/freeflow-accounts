@@ -66,30 +66,56 @@ function AuthPage() {
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="block text-center mb-8 text-2xl font-bold gradient-text">Free Accounting</Link>
+        <Link to="/" className="block text-center mb-8 text-2xl font-bold gradient-text">
+          Free Accounting
+        </Link>
         <div className="bg-card border rounded-2xl shadow-elevated p-8">
           <h1 className="text-2xl font-bold mb-1">
             {mode === "login" ? "Welcome back" : "Create your account"}
           </h1>
           <p className="text-sm text-muted-foreground mb-6">
-            {mode === "login" ? "Sign in to your free account." : "Free forever. No credit card required."}
+            {mode === "login"
+              ? "Sign in to your free account."
+              : "Free forever. No credit card required."}
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
               <div>
                 <Label htmlFor="name">Full name</Label>
-                <Input id="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                <Input
+                  id="name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
               </div>
             )}
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-gradient-hero shadow-glow">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-hero shadow-glow"
+            >
               {loading ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}
             </Button>
           </form>

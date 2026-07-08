@@ -42,7 +42,9 @@ export type PdfLine = {
   tax_name?: string | null;
 };
 
-async function loadImageDataUrl(url: string): Promise<{ dataUrl: string; w: number; h: number } | null> {
+async function loadImageDataUrl(
+  url: string,
+): Promise<{ dataUrl: string; w: number; h: number } | null> {
   try {
     const res = await fetch(url);
     if (!res.ok) return null;
@@ -80,10 +82,14 @@ export async function generateInvoicePdf(opts: {
   if (company?.logo_url) {
     const img = await loadImageDataUrl(company.logo_url);
     if (img && img.w && img.h) {
-      const maxW = 120, maxH = 60;
+      const maxW = 120,
+        maxH = 60;
       const ratio = Math.min(maxW / img.w, maxH / img.h);
-      const w = img.w * ratio, h = img.h * ratio;
-      try { doc.addImage(img.dataUrl, "PNG", margin, cursorY, w, h); } catch {}
+      const w = img.w * ratio,
+        h = img.h * ratio;
+      try {
+        doc.addImage(img.dataUrl, "PNG", margin, cursorY, w, h);
+      } catch {}
     }
   }
 
@@ -91,7 +97,10 @@ export async function generateInvoicePdf(opts: {
   doc.setFontSize(11);
   const rightX = pageWidth - margin;
   let ry = cursorY;
-  if (company?.name) { doc.text(company.name, rightX, ry, { align: "right" }); ry += 14; }
+  if (company?.name) {
+    doc.text(company.name, rightX, ry, { align: "right" });
+    ry += 14;
+  }
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   const compLines = [
@@ -103,7 +112,10 @@ export async function generateInvoicePdf(opts: {
     company?.website,
     company?.tax_number ? `Tax #: ${company.tax_number}` : null,
   ].filter((x): x is string => Boolean(x && x.trim()));
-  compLines.forEach((l) => { doc.text(l, rightX, ry, { align: "right" }); ry += 12; });
+  compLines.forEach((l) => {
+    doc.text(l, rightX, ry, { align: "right" });
+    ry += 12;
+  });
 
   cursorY = Math.max(cursorY + 70, ry + 10);
 
@@ -125,10 +137,19 @@ export async function generateInvoicePdf(opts: {
   doc.text("Bill to", margin, billY);
   doc.setFont("helvetica", "normal");
   billY += 14;
-  if (customer?.name) { doc.text(customer.name, margin, billY); billY += 12; }
-  if (customer?.email) { doc.text(customer.email, margin, billY); billY += 12; }
+  if (customer?.name) {
+    doc.text(customer.name, margin, billY);
+    billY += 12;
+  }
+  if (customer?.email) {
+    doc.text(customer.email, margin, billY);
+    billY += 12;
+  }
   if (customer?.address) {
-    customer.address.split("\n").forEach((l) => { doc.text(l, margin, billY); billY += 12; });
+    customer.address.split("\n").forEach((l) => {
+      doc.text(l, margin, billY);
+      billY += 12;
+    });
   }
 
   const body = lines.map((l) => {
@@ -176,7 +197,8 @@ export async function generateInvoicePdf(opts: {
     const base = (Number(l.quantity) || 0) * (Number(l.unit_price) || 0);
     const tax = base * (rate / 100);
     const g = taxGroups.get(key) ?? { name, rate, base: 0, tax: 0 };
-    g.base += base; g.tax += tax;
+    g.base += base;
+    g.tax += tax;
     taxGroups.set(key, g);
   }
 

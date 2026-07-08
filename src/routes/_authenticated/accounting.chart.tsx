@@ -4,8 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -57,18 +70,32 @@ function ChartPage() {
     else setAccounts((data ?? []) as Account[]);
     setLoading(false);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const grouped = useMemo(() => {
-    const g: Record<AccountType, Account[]> = { asset: [], liability: [], equity: [], revenue: [], expense: [] };
+    const g: Record<AccountType, Account[]> = {
+      asset: [],
+      liability: [],
+      equity: [],
+      revenue: [],
+      expense: [],
+    };
     accounts.forEach((a) => g[a.type].push(a));
     return g;
   }, [accounts]);
 
   async function toggleActive(a: Account) {
-    const { error } = await supabase.from("accounts").update({ is_active: !a.is_active }).eq("id", a.id);
+    const { error } = await supabase
+      .from("accounts")
+      .update({ is_active: !a.is_active })
+      .eq("id", a.id);
     if (error) toast.error(error.message);
-    else { toast.success(a.is_active ? "Deactivated" : "Activated"); load(); }
+    else {
+      toast.success(a.is_active ? "Deactivated" : "Activated");
+      load();
+    }
   }
 
   return (
@@ -78,15 +105,32 @@ function ChartPage() {
           <h1 className="text-3xl font-bold mb-1">Chart of accounts</h1>
           <p className="text-muted-foreground">Double-entry chart of accounts for your business.</p>
         </div>
-        <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEditing(null); }}>
+        <Dialog
+          open={open}
+          onOpenChange={(o) => {
+            setOpen(o);
+            if (!o) setEditing(null);
+          }}
+        >
           <DialogTrigger asChild>
-            <Button onClick={() => setEditing(null)}><Plus className="w-4 h-4 mr-2" />New account</Button>
+            <Button onClick={() => setEditing(null)}>
+              <Plus className="w-4 h-4 mr-2" />
+              New account
+            </Button>
           </DialogTrigger>
-          <AccountDialog editing={editing} onSaved={() => { setOpen(false); load(); }} />
+          <AccountDialog
+            editing={editing}
+            onSaved={() => {
+              setOpen(false);
+              load();
+            }}
+          />
         </Dialog>
       </div>
 
-      {loading ? <div className="text-muted-foreground">Loading…</div> : (
+      {loading ? (
+        <div className="text-muted-foreground">Loading…</div>
+      ) : (
         <div className="space-y-8">
           {TYPE_ORDER.map((t) => (
             <div key={t}>
@@ -104,17 +148,46 @@ function ChartPage() {
                   </thead>
                   <tbody>
                     {grouped[t].length === 0 && (
-                      <tr><td colSpan={5} className="px-4 py-6 text-center text-muted-foreground text-sm">No accounts</td></tr>
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className="px-4 py-6 text-center text-muted-foreground text-sm"
+                        >
+                          No accounts
+                        </td>
+                      </tr>
                     )}
                     {grouped[t].map((a) => (
                       <tr key={a.id} className="border-t">
                         <td className="px-4 py-2 font-mono text-sm">{a.code}</td>
-                        <td className="px-4 py-2">{a.name}{a.is_system && <span className="ml-2 text-xs text-muted-foreground">system</span>}</td>
+                        <td className="px-4 py-2">
+                          {a.name}
+                          {a.is_system && (
+                            <span className="ml-2 text-xs text-muted-foreground">system</span>
+                          )}
+                        </td>
                         <td className="px-4 py-2 text-sm text-muted-foreground">{a.description}</td>
-                        <td className="px-4 py-2">{a.is_active ? <Badge variant="secondary">Active</Badge> : <Badge variant="outline">Inactive</Badge>}</td>
+                        <td className="px-4 py-2">
+                          {a.is_active ? (
+                            <Badge variant="secondary">Active</Badge>
+                          ) : (
+                            <Badge variant="outline">Inactive</Badge>
+                          )}
+                        </td>
                         <td className="px-4 py-2 text-right">
-                          <Button variant="ghost" size="icon" onClick={() => { setEditing(a); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="icon" onClick={() => toggleActive(a)}><Power className="w-4 h-4" /></Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEditing(a);
+                              setOpen(true);
+                            }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => toggleActive(a)}>
+                            <Power className="w-4 h-4" />
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -144,40 +217,79 @@ function AccountDialog({ editing, onSaved }: { editing: Account | null; onSaved:
   }, [editing]);
 
   async function save() {
-    if (!code.trim() || !name.trim()) { toast.error("Code and name are required"); return; }
+    if (!code.trim() || !name.trim()) {
+      toast.error("Code and name are required");
+      return;
+    }
     setSaving(true);
     const { data: userRes } = await supabase.auth.getUser();
     const uid = userRes.user?.id;
-    if (!uid) { setSaving(false); return; }
-    const payload = { code: code.trim(), name: name.trim(), type, description: description || null };
+    if (!uid) {
+      setSaving(false);
+      return;
+    }
+    const payload = {
+      code: code.trim(),
+      name: name.trim(),
+      type,
+      description: description || null,
+    };
     const { error } = editing
       ? await supabase.from("accounts").update(payload).eq("id", editing.id)
       : await supabase.from("accounts").insert({ ...payload, user_id: uid });
     setSaving(false);
     if (error) toast.error(error.message);
-    else { toast.success(editing ? "Account updated" : "Account created"); onSaved(); }
+    else {
+      toast.success(editing ? "Account updated" : "Account created");
+      onSaved();
+    }
   }
 
   return (
     <DialogContent>
-      <DialogHeader><DialogTitle>{editing ? "Edit account" : "New account"}</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>{editing ? "Edit account" : "New account"}</DialogTitle>
+      </DialogHeader>
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
-          <div><Label>Code</Label><Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. 6150" /></div>
+          <div>
+            <Label>Code</Label>
+            <Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. 6150" />
+          </div>
           <div>
             <Label>Type</Label>
             <Select value={type} onValueChange={(v) => setType(v as AccountType)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {TYPE_ORDER.map((t) => <SelectItem key={t} value={t}>{TYPE_LABELS[t]}</SelectItem>)}
+                {TYPE_ORDER.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {TYPE_LABELS[t]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         </div>
-        <div><Label>Name</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
-        <div><Label>Description</Label><Textarea value={description ?? ""} onChange={(e) => setDescription(e.target.value)} rows={2} /></div>
+        <div>
+          <Label>Name</Label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
+        <div>
+          <Label>Description</Label>
+          <Textarea
+            value={description ?? ""}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={2}
+          />
+        </div>
       </div>
-      <DialogFooter><Button onClick={save} disabled={saving}>{saving ? "Saving…" : "Save"}</Button></DialogFooter>
+      <DialogFooter>
+        <Button onClick={save} disabled={saving}>
+          {saving ? "Saving…" : "Save"}
+        </Button>
+      </DialogFooter>
     </DialogContent>
   );
 }

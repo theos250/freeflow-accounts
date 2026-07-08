@@ -7,10 +7,16 @@ export function useFxRates(base = "USD") {
   useEffect(() => {
     let alive = true;
     getRates(base)
-      .then((c) => { if (alive) setRates(c.rates); })
+      .then((c) => {
+        if (alive) setRates(c.rates);
+      })
       .catch(() => {})
-      .finally(() => { if (alive) setLoading(false); });
-    return () => { alive = false; };
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
   }, [base]);
   return { rates, loading };
 }

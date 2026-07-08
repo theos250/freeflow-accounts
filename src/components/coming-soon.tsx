@@ -14,7 +14,9 @@ export function ComingSoon({
     <div>
       <div className="flex items-center gap-3 mb-2">
         <h1 className="text-3xl font-bold">{title}</h1>
-        <Badge variant="secondary" className="gap-1"><Sparkles className="h-3 w-3" /> Coming soon</Badge>
+        <Badge variant="secondary" className="gap-1">
+          <Sparkles className="h-3 w-3" /> Coming soon
+        </Badge>
       </div>
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
       {items && items.length > 0 && (

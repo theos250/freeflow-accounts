@@ -32,8 +32,18 @@ type Company = {
 };
 
 const EMPTY: Company = {
-  name: "", email: "", phone: "", website: "", address: "", city: "",
-  state: "", postal_code: "", country: "", tax_number: "", currency: "USD", logo_url: null,
+  name: "",
+  email: "",
+  phone: "",
+  website: "",
+  address: "",
+  city: "",
+  state: "",
+  postal_code: "",
+  country: "",
+  tax_number: "",
+  currency: "USD",
+  logo_url: null,
 };
 
 function CompanyPage() {
@@ -57,7 +67,13 @@ function CompanyPage() {
       if (!u.user) return;
       setUserId(u.user.id);
       const [{ data: c }, { data: p }] = await Promise.all([
-        supabase.from("companies").select("*").eq("user_id", u.user.id).order("created_at").limit(1).maybeSingle(),
+        supabase
+          .from("companies")
+          .select("*")
+          .eq("user_id", u.user.id)
+          .order("created_at")
+          .limit(1)
+          .maybeSingle(),
         supabase.from("profiles").select("default_currency").eq("id", u.user.id).maybeSingle(),
       ]);
       if (c) {
@@ -73,8 +89,13 @@ function CompanyPage() {
     setUploading(true);
     const ext = file.name.split(".").pop() ?? "png";
     const path = `${userId}/logo-${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("company-logos").upload(path, file, { upsert: true, contentType: file.type });
-    if (error) { setUploading(false); return toast.error(error.message); }
+    const { error } = await supabase.storage
+      .from("company-logos")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (error) {
+      setUploading(false);
+      return toast.error(error.message);
+    }
     setCompany((c) => ({ ...c, logo_url: path }));
     await refreshLogoDisplay(path);
     setUploading(false);
@@ -89,12 +110,19 @@ function CompanyPage() {
     if (company.id) {
       ({ error } = await supabase.from("companies").update(payload).eq("id", company.id));
     } else {
-      const { data, error: e } = await supabase.from("companies").insert(payload).select("id").single();
+      const { data, error: e } = await supabase
+        .from("companies")
+        .insert(payload)
+        .select("id")
+        .single();
       error = e;
       if (data) setCompany((c) => ({ ...c, id: data.id }));
     }
     if (!error) {
-      await supabase.from("profiles").update({ default_currency: profileCurrency }).eq("id", userId);
+      await supabase
+        .from("profiles")
+        .update({ default_currency: profileCurrency })
+        .eq("id", userId);
       setDefaultCurrency(profileCurrency);
     }
     setSaving(false);
@@ -106,20 +134,45 @@ function CompanyPage() {
     <div className="max-w-4xl">
       <div className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Company settings</h1>
-        <p className="text-muted-foreground">Your logo, name and address appear on invoices and PDFs.</p>
+        <p className="text-muted-foreground">
+          Your logo, name and address appear on invoices and PDFs.
+        </p>
       </div>
 
       <div className="grid gap-6">
         <section className="rounded-xl border bg-card p-6">
-          <div className="flex items-center gap-2 mb-4"><Building className="h-4 w-4" /><h2 className="font-semibold">Branding</h2></div>
+          <div className="flex items-center gap-2 mb-4">
+            <Building className="h-4 w-4" />
+            <h2 className="font-semibold">Branding</h2>
+          </div>
           <div className="flex items-center gap-6">
             <div className="h-24 w-24 rounded-lg border bg-muted flex items-center justify-center overflow-hidden shrink-0">
-              {logoDisplay ? <img src={logoDisplay} alt="Logo" className="h-full w-full object-contain" /> : <span className="text-xs text-muted-foreground">No logo</span>}
+              {logoDisplay ? (
+                <img src={logoDisplay} alt="Logo" className="h-full w-full object-contain" />
+              ) : (
+                <span className="text-xs text-muted-foreground">No logo</span>
+              )}
             </div>
             <div>
-              <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && uploadLogo(e.target.files[0])} />
-              <Button type="button" variant="outline" onClick={() => fileRef.current?.click()} disabled={uploading}>
-                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Upload logo
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => e.target.files?.[0] && uploadLogo(e.target.files[0])}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}{" "}
+                Upload logo
               </Button>
               <p className="text-xs text-muted-foreground mt-2">PNG or JPG. Recommended 512×512.</p>
             </div>
@@ -127,32 +180,106 @@ function CompanyPage() {
         </section>
 
         <section className="rounded-xl border bg-card p-6 grid gap-4 md:grid-cols-2">
-          <div className="md:col-span-2"><h2 className="font-semibold mb-2">Business details</h2></div>
-          <div><Label>Company name</Label><Input value={company.name} onChange={(e) => setCompany({ ...company, name: e.target.value })} /></div>
-          <div><Label>Tax / VAT number</Label><Input value={company.tax_number} onChange={(e) => setCompany({ ...company, tax_number: e.target.value })} /></div>
-          <div><Label>Email</Label><Input type="email" value={company.email} onChange={(e) => setCompany({ ...company, email: e.target.value })} /></div>
-          <div><Label>Phone</Label><Input value={company.phone} onChange={(e) => setCompany({ ...company, phone: e.target.value })} /></div>
-          <div className="md:col-span-2"><Label>Website</Label><Input value={company.website} onChange={(e) => setCompany({ ...company, website: e.target.value })} /></div>
+          <div className="md:col-span-2">
+            <h2 className="font-semibold mb-2">Business details</h2>
+          </div>
+          <div>
+            <Label>Company name</Label>
+            <Input
+              value={company.name}
+              onChange={(e) => setCompany({ ...company, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Tax / VAT number</Label>
+            <Input
+              value={company.tax_number}
+              onChange={(e) => setCompany({ ...company, tax_number: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              value={company.email}
+              onChange={(e) => setCompany({ ...company, email: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Phone</Label>
+            <Input
+              value={company.phone}
+              onChange={(e) => setCompany({ ...company, phone: e.target.value })}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label>Website</Label>
+            <Input
+              value={company.website}
+              onChange={(e) => setCompany({ ...company, website: e.target.value })}
+            />
+          </div>
         </section>
 
         <section className="rounded-xl border bg-card p-6 grid gap-4 md:grid-cols-2">
-          <div className="md:col-span-2"><h2 className="font-semibold mb-2">Address</h2></div>
-          <div className="md:col-span-2"><Label>Street address</Label><Textarea rows={2} value={company.address} onChange={(e) => setCompany({ ...company, address: e.target.value })} /></div>
-          <div><Label>City</Label><Input value={company.city} onChange={(e) => setCompany({ ...company, city: e.target.value })} /></div>
-          <div><Label>State / Province</Label><Input value={company.state} onChange={(e) => setCompany({ ...company, state: e.target.value })} /></div>
-          <div><Label>Postal code</Label><Input value={company.postal_code} onChange={(e) => setCompany({ ...company, postal_code: e.target.value })} /></div>
-          <div><Label>Country</Label><Input value={company.country} onChange={(e) => setCompany({ ...company, country: e.target.value })} /></div>
+          <div className="md:col-span-2">
+            <h2 className="font-semibold mb-2">Address</h2>
+          </div>
+          <div className="md:col-span-2">
+            <Label>Street address</Label>
+            <Textarea
+              rows={2}
+              value={company.address}
+              onChange={(e) => setCompany({ ...company, address: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>City</Label>
+            <Input
+              value={company.city}
+              onChange={(e) => setCompany({ ...company, city: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>State / Province</Label>
+            <Input
+              value={company.state}
+              onChange={(e) => setCompany({ ...company, state: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Postal code</Label>
+            <Input
+              value={company.postal_code}
+              onChange={(e) => setCompany({ ...company, postal_code: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Country</Label>
+            <Input
+              value={company.country}
+              onChange={(e) => setCompany({ ...company, country: e.target.value })}
+            />
+          </div>
         </section>
 
         <section className="rounded-xl border bg-card p-6 grid gap-4 md:grid-cols-2">
-          <div className="md:col-span-2"><h2 className="font-semibold mb-1">Currency</h2><p className="text-xs text-muted-foreground mb-2">Dashboard reports and defaults for new invoices/expenses use your preferred currency.</p></div>
+          <div className="md:col-span-2">
+            <h2 className="font-semibold mb-1">Currency</h2>
+            <p className="text-xs text-muted-foreground mb-2">
+              Dashboard reports and defaults for new invoices/expenses use your preferred currency.
+            </p>
+          </div>
           <div>
             <Label>Dashboard currency (your preference)</Label>
             <CurrencySelect value={profileCurrency} onValueChange={setProfileCurrency} />
           </div>
           <div>
             <Label>Default company currency</Label>
-            <CurrencySelect value={company.currency} onValueChange={(v) => setCompany({ ...company, currency: v })} />
+            <CurrencySelect
+              value={company.currency}
+              onValueChange={(v) => setCompany({ ...company, currency: v })}
+            />
           </div>
         </section>
 

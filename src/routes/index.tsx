@@ -42,16 +42,47 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: FileText, title: "Smart Invoicing", desc: "Create, send, and track beautiful invoices in seconds. PDF export, recurring billing, and online payments built in." },
-  { icon: Receipt, title: "Expense Tracking", desc: "Snap a receipt, our AI extracts the vendor, date, and amount automatically. Categorize and reconcile effortlessly." },
-  { icon: Building2, title: "Multi-Company", desc: "Run unlimited companies from one account. Perfect for agencies, accountants, and entrepreneurs juggling brands." },
-  { icon: Globe2, title: "Multi-Currency", desc: "Trade globally with live exchange rates. Native support for USD, EUR, GBP, RWF, KES, UGX, NGN and more." },
-  { icon: BarChart3, title: "Real-Time Reports", desc: "P&L, balance sheet, cash flow, tax reports — generated instantly. Export to PDF, Excel, or CSV." },
-  { icon: Sparkles, title: "AI Bookkeeper", desc: "Ask: \u201cHow much profit did I make?\u201d or \u201cForecast next month.\u201d Get instant answers from your data." },
+  {
+    icon: FileText,
+    title: "Smart Invoicing",
+    desc: "Create, send, and track beautiful invoices in seconds. PDF export, recurring billing, and online payments built in.",
+  },
+  {
+    icon: Receipt,
+    title: "Expense Tracking",
+    desc: "Snap a receipt, our AI extracts the vendor, date, and amount automatically. Categorize and reconcile effortlessly.",
+  },
+  {
+    icon: Building2,
+    title: "Multi-Company",
+    desc: "Run unlimited companies from one account. Perfect for agencies, accountants, and entrepreneurs juggling brands.",
+  },
+  {
+    icon: Globe2,
+    title: "Multi-Currency",
+    desc: "Trade globally with live exchange rates. Native support for USD, EUR, GBP, RWF, KES, UGX, NGN and more.",
+  },
+  {
+    icon: BarChart3,
+    title: "Real-Time Reports",
+    desc: "P&L, balance sheet, cash flow, tax reports — generated instantly. Export to PDF, Excel, or CSV.",
+  },
+  {
+    icon: Sparkles,
+    title: "AI Bookkeeper",
+    desc: "Ask: \u201cHow much profit did I make?\u201d or \u201cForecast next month.\u201d Get instant answers from your data.",
+  },
 ];
 
 const audience = [
-  "Freelancers", "Small Businesses", "Startups", "NGOs", "Agencies", "Consultants", "Online Sellers", "African SMEs",
+  "Freelancers",
+  "Small Businesses",
+  "Startups",
+  "NGOs",
+  "Agencies",
+  "Consultants",
+  "Online Sellers",
+  "African SMEs",
 ];
 
 const pricing = [
@@ -142,15 +173,41 @@ function Header() {
           <span className="text-lg font-bold tracking-tight">Free Accounting</span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
-          <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Features</a>
-          <a href="#ai" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">AI</a>
-          <a href="#pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Pricing</a>
-          <a href="#audience" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Who it's for</a>
+          <a
+            href="#features"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Features
+          </a>
+          <a
+            href="#ai"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            AI
+          </a>
+          <a
+            href="#pricing"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Pricing
+          </a>
+          <a
+            href="#audience"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Who it's for
+          </a>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
-          <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/auth" search={{ mode: "login" }}>
+              Sign in
+            </Link>
+          </Button>
           <Button asChild size="sm" className="bg-gradient-hero shadow-glow hover:opacity-95">
-            <Link to="/auth" search={{ mode: "signup" }}>Get started free</Link>
+            <Link to="/auth" search={{ mode: "signup" }}>
+              Get started free
+            </Link>
           </Button>
         </div>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">
@@ -160,13 +217,29 @@ function Header() {
       {open && (
         <div className="border-t border-border bg-background px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
-            <a href="#features" onClick={() => setOpen(false)} className="text-sm font-medium">Features</a>
-            <a href="#ai" onClick={() => setOpen(false)} className="text-sm font-medium">AI</a>
-            <a href="#pricing" onClick={() => setOpen(false)} className="text-sm font-medium">Pricing</a>
-            <a href="#audience" onClick={() => setOpen(false)} className="text-sm font-medium">Who it's for</a>
+            <a href="#features" onClick={() => setOpen(false)} className="text-sm font-medium">
+              Features
+            </a>
+            <a href="#ai" onClick={() => setOpen(false)} className="text-sm font-medium">
+              AI
+            </a>
+            <a href="#pricing" onClick={() => setOpen(false)} className="text-sm font-medium">
+              Pricing
+            </a>
+            <a href="#audience" onClick={() => setOpen(false)} className="text-sm font-medium">
+              Who it's for
+            </a>
             <div className="mt-2 flex flex-col gap-2">
-              <Button asChild variant="ghost" size="sm"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
-              <Button asChild size="sm" className="bg-gradient-hero"><Link to="/auth" search={{ mode: "signup" }}>Get started free</Link></Button>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/auth" search={{ mode: "login" }}>
+                  Sign in
+                </Link>
+              </Button>
+              <Button asChild size="sm" className="bg-gradient-hero">
+                <Link to="/auth" search={{ mode: "signup" }}>
+                  Get started free
+                </Link>
+              </Button>
             </div>
           </nav>
         </div>
@@ -184,7 +257,10 @@ function Hero() {
       </div>
       <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:pb-28 md:pt-24">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="secondary" className="mb-6 gap-1.5 border-border/60 bg-card/80 px-3 py-1.5 text-xs font-medium backdrop-blur">
+          <Badge
+            variant="secondary"
+            className="mb-6 gap-1.5 border-border/60 bg-card/80 px-3 py-1.5 text-xs font-medium backdrop-blur"
+          >
             <Sparkles className="h-3.5 w-3.5 text-accent" />
             AI-powered bookkeeping is here
           </Badge>
@@ -198,9 +274,15 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="bg-gradient-hero shadow-glow hover:opacity-95">
-              <Link to="/auth" search={{ mode: "signup" }}>Start free — no card required <ArrowRight className="ml-1 h-4 w-4" /></Link>
+              <Link to="/auth" search={{ mode: "signup" }}>
+                Start free — no card required <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
-            <Button asChild size="lg" variant="outline"><Link to="/auth" search={{ mode: "login" }}>Sign in</Link></Button>
+            <Button asChild size="lg" variant="outline">
+              <Link to="/auth" search={{ mode: "login" }}>
+                Sign in
+              </Link>
+            </Button>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             Join 100,000+ businesses · GDPR-ready · Bank-grade security
@@ -271,7 +353,9 @@ function Features() {
     <section id="features" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">Features</Badge>
+          <Badge variant="secondary" className="mb-4">
+            Features
+          </Badge>
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
             Everything you need to run the books
           </h2>
@@ -315,8 +399,8 @@ function AiSection() {
             Get answers in seconds.
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Skip the spreadsheet detective work. Our AI understands your financial data and
-            answers in plain language — so you can make decisions, not reports.
+            Skip the spreadsheet detective work. Our AI understands your financial data and answers
+            in plain language — so you can make decisions, not reports.
           </p>
           <ul className="mt-6 space-y-3">
             {[
@@ -346,14 +430,15 @@ function AiSection() {
                 What was my profit last month?
               </div>
               <div className="max-w-sm rounded-2xl rounded-tl-sm bg-muted px-4 py-3 text-sm">
-                You made <span className="font-semibold text-secondary">$12,480 profit</span> in October —
-                up 18% from September. Revenue: $34,200. Expenses: $21,720.
+                You made <span className="font-semibold text-secondary">$12,480 profit</span> in
+                October — up 18% from September. Revenue: $34,200. Expenses: $21,720.
               </div>
               <div className="ml-auto max-w-xs rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
                 Show overdue invoices
               </div>
               <div className="max-w-sm rounded-2xl rounded-tl-sm bg-muted px-4 py-3 text-sm">
-                3 overdue invoices totaling <span className="font-semibold">$4,820</span>. Want me to send reminders?
+                3 overdue invoices totaling <span className="font-semibold">$4,820</span>. Want me
+                to send reminders?
               </div>
             </div>
           </div>
@@ -367,17 +452,22 @@ function Audience() {
   return (
     <section id="audience" className="py-24">
       <div className="mx-auto max-w-7xl px-6 text-center">
-        <Badge variant="secondary" className="mb-4">Built for everyone</Badge>
+        <Badge variant="secondary" className="mb-4">
+          Built for everyone
+        </Badge>
         <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
           From solo freelancer to growing NGO
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Free Accounting scales with you — whether you're invoicing your first client or running
-          a multi-country operation.
+          Free Accounting scales with you — whether you're invoicing your first client or running a
+          multi-country operation.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           {audience.map((a) => (
-            <div key={a} className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium shadow-soft transition-all hover:border-primary/40 hover:shadow-elevated">
+            <div
+              key={a}
+              className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium shadow-soft transition-all hover:border-primary/40 hover:shadow-elevated"
+            >
               {a}
             </div>
           ))}
@@ -385,9 +475,21 @@ function Audience() {
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {[
-            { icon: ShieldCheck, title: "Bank-grade security", desc: "Encrypted at rest and in transit. GDPR-ready, with SOC 2 on the roadmap." },
-            { icon: Users, title: "Built for teams", desc: "Invite your accountant, partner, or staff. Roles and permissions included." },
-            { icon: CreditCard, title: "Get paid faster", desc: "Online payments via card and mobile money. Average customer pays 8 days sooner." },
+            {
+              icon: ShieldCheck,
+              title: "Bank-grade security",
+              desc: "Encrypted at rest and in transit. GDPR-ready, with SOC 2 on the roadmap.",
+            },
+            {
+              icon: Users,
+              title: "Built for teams",
+              desc: "Invite your accountant, partner, or staff. Roles and permissions included.",
+            },
+            {
+              icon: CreditCard,
+              title: "Get paid faster",
+              desc: "Online payments via card and mobile money. Average customer pays 8 days sooner.",
+            },
           ].map((b) => (
             <div key={b.title} className="rounded-2xl border border-border bg-card p-7 text-left">
               <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/15">
@@ -408,7 +510,9 @@ function Pricing() {
     <section id="pricing" className="bg-gradient-subtle py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">Pricing</Badge>
+          <Badge variant="secondary" className="mb-4">
+            Pricing
+          </Badge>
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Simple, honest pricing</h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Start free. Upgrade when you need more. Cancel anytime.
@@ -428,7 +532,9 @@ function Pricing() {
                   Most popular
                 </div>
               )}
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{p.name}</div>
+              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                {p.name}
+              </div>
               <div className="mt-3 flex items-baseline gap-1.5">
                 <span className="text-5xl font-bold tracking-tight">{p.price}</span>
                 <span className="text-sm text-muted-foreground">/ {p.period}</span>
@@ -439,7 +545,9 @@ function Pricing() {
                 className={`mt-6 w-full ${p.highlighted ? "bg-gradient-hero shadow-glow hover:opacity-95" : ""}`}
                 variant={p.highlighted ? "default" : "outline"}
               >
-                <Link to="/auth" search={{ mode: "signup" }}>{p.cta}</Link>
+                <Link to="/auth" search={{ mode: "signup" }}>
+                  {p.cta}
+                </Link>
               </Button>
               <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
@@ -473,11 +581,25 @@ function CTA() {
             Join 100,000+ businesses using Free Accounting. No credit card, no limits, free forever.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" variant="secondary" className="bg-card text-foreground hover:bg-card/90">
-              <Link to="/auth" search={{ mode: "signup" }}>Get started free <ArrowRight className="ml-1 h-4 w-4" /></Link>
+            <Button
+              asChild
+              size="lg"
+              variant="secondary"
+              className="bg-card text-foreground hover:bg-card/90"
+            >
+              <Link to="/auth" search={{ mode: "signup" }}>
+                Get started free <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20">
-              <Link to="/auth" search={{ mode: "login" }}>Sign in</Link>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white/30 bg-white/10 text-primary-foreground hover:bg-white/20"
+            >
+              <Link to="/auth" search={{ mode: "login" }}>
+                Sign in
+              </Link>
             </Button>
           </div>
         </div>
@@ -499,11 +621,15 @@ function Footer() {
               <span className="text-lg font-bold tracking-tight">Free Accounting</span>
             </Link>
             <p className="mt-3 max-w-sm text-sm text-muted-foreground">
-              100% free accounting software for small businesses worldwide. Built modern, built for you.
+              100% free accounting software for small businesses worldwide. Built modern, built for
+              you.
             </p>
           </div>
           {[
-            { title: "Product", links: ["Features", "Pricing", "AI Bookkeeper", "Integrations", "Changelog"] },
+            {
+              title: "Product",
+              links: ["Features", "Pricing", "AI Bookkeeper", "Integrations", "Changelog"],
+            },
             { title: "Company", links: ["About", "Blog", "Careers", "Press"] },
             { title: "Resources", links: ["Help center", "Guides", "Contact", "Privacy", "Terms"] },
           ].map((c) => (
@@ -512,7 +638,12 @@ function Footer() {
               <ul className="mt-3 space-y-2">
                 {c.links.map((l) => (
                   <li key={l}>
-                    <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">{l}</a>
+                    <a
+                      href="#"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {l}
+                    </a>
                   </li>
                 ))}
               </ul>
