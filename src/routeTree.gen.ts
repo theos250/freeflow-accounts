@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/sync'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
@@ -31,6 +32,9 @@ import { Route as AuthenticatedSalesCreditNotesRouteImport } from './routes/_aut
 import { Route as AuthenticatedPurchasesVendorsRouteImport } from './routes/_authenticated/purchases.vendors'
 import { Route as AuthenticatedPurchasesOrdersRouteImport } from './routes/_authenticated/purchases.orders'
 import { Route as AuthenticatedPurchasesBillsRouteImport } from './routes/_authenticated/purchases.bills'
+import { Route as AuthenticatedPayrollSettingsRouteImport } from './routes/_authenticated/payroll.settings'
+import { Route as AuthenticatedPayrollPayslipsRouteImport } from './routes/_authenticated/payroll.payslips'
+import { Route as AuthenticatedPayrollPayRunsRouteImport } from './routes/_authenticated/payroll.pay-runs'
 import { Route as AuthenticatedItemsStockMovementsRouteImport } from './routes/_authenticated/items.stock-movements'
 import { Route as AuthenticatedItemsServicesRouteImport } from './routes/_authenticated/items.services'
 import { Route as AuthenticatedItemsProductsRouteImport } from './routes/_authenticated/items.products'
@@ -78,6 +82,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedSyncRoute = AuthenticatedSyncRouteImport.update({
   id: '/sync',
   path: '/sync',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
@@ -166,6 +175,24 @@ const AuthenticatedPurchasesBillsRoute =
   AuthenticatedPurchasesBillsRouteImport.update({
     id: '/purchases/bills',
     path: '/purchases/bills',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPayrollSettingsRoute =
+  AuthenticatedPayrollSettingsRouteImport.update({
+    id: '/payroll/settings',
+    path: '/payroll/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPayrollPayslipsRoute =
+  AuthenticatedPayrollPayslipsRouteImport.update({
+    id: '/payroll/payslips',
+    path: '/payroll/payslips',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPayrollPayRunsRoute =
+  AuthenticatedPayrollPayRunsRouteImport.update({
+    id: '/payroll/pay-runs',
+    path: '/payroll/pay-runs',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedItemsStockMovementsRoute =
@@ -295,6 +322,7 @@ export interface FileRoutesByFullPath {
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
@@ -314,6 +342,9 @@ export interface FileRoutesByFullPath {
   '/items/products': typeof AuthenticatedItemsProductsRoute
   '/items/services': typeof AuthenticatedItemsServicesRoute
   '/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
+  '/payroll/pay-runs': typeof AuthenticatedPayrollPayRunsRoute
+  '/payroll/payslips': typeof AuthenticatedPayrollPayslipsRoute
+  '/payroll/settings': typeof AuthenticatedPayrollSettingsRoute
   '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -337,6 +368,7 @@ export interface FileRoutesByTo {
   '/expenses': typeof AuthenticatedExpensesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
@@ -356,6 +388,9 @@ export interface FileRoutesByTo {
   '/items/products': typeof AuthenticatedItemsProductsRoute
   '/items/services': typeof AuthenticatedItemsServicesRoute
   '/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
+  '/payroll/pay-runs': typeof AuthenticatedPayrollPayRunsRoute
+  '/payroll/payslips': typeof AuthenticatedPayrollPayslipsRoute
+  '/payroll/settings': typeof AuthenticatedPayrollSettingsRoute
   '/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -381,6 +416,7 @@ export interface FileRoutesById {
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/_authenticated/accounting/chart': typeof AuthenticatedAccountingChartRoute
   '/_authenticated/accounting/journals': typeof AuthenticatedAccountingJournalsRoute
@@ -400,6 +436,9 @@ export interface FileRoutesById {
   '/_authenticated/items/products': typeof AuthenticatedItemsProductsRoute
   '/_authenticated/items/services': typeof AuthenticatedItemsServicesRoute
   '/_authenticated/items/stock-movements': typeof AuthenticatedItemsStockMovementsRoute
+  '/_authenticated/payroll/pay-runs': typeof AuthenticatedPayrollPayRunsRoute
+  '/_authenticated/payroll/payslips': typeof AuthenticatedPayrollPayslipsRoute
+  '/_authenticated/payroll/settings': typeof AuthenticatedPayrollSettingsRoute
   '/_authenticated/purchases/bills': typeof AuthenticatedPurchasesBillsRoute
   '/_authenticated/purchases/orders': typeof AuthenticatedPurchasesOrdersRoute
   '/_authenticated/purchases/vendors': typeof AuthenticatedPurchasesVendorsRoute
@@ -425,6 +464,7 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/settings'
     | '/sync'
     | '/accounting/chart'
     | '/accounting/journals'
@@ -444,6 +484,9 @@ export interface FileRouteTypes {
     | '/items/products'
     | '/items/services'
     | '/items/stock-movements'
+    | '/payroll/pay-runs'
+    | '/payroll/payslips'
+    | '/payroll/settings'
     | '/purchases/bills'
     | '/purchases/orders'
     | '/purchases/vendors'
@@ -467,6 +510,7 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/invoices'
     | '/reports'
+    | '/settings'
     | '/sync'
     | '/accounting/chart'
     | '/accounting/journals'
@@ -486,6 +530,9 @@ export interface FileRouteTypes {
     | '/items/products'
     | '/items/services'
     | '/items/stock-movements'
+    | '/payroll/pay-runs'
+    | '/payroll/payslips'
+    | '/payroll/settings'
     | '/purchases/bills'
     | '/purchases/orders'
     | '/purchases/vendors'
@@ -510,6 +557,7 @@ export interface FileRouteTypes {
     | '/_authenticated/expenses'
     | '/_authenticated/invoices'
     | '/_authenticated/reports'
+    | '/_authenticated/settings'
     | '/_authenticated/sync'
     | '/_authenticated/accounting/chart'
     | '/_authenticated/accounting/journals'
@@ -529,6 +577,9 @@ export interface FileRouteTypes {
     | '/_authenticated/items/products'
     | '/_authenticated/items/services'
     | '/_authenticated/items/stock-movements'
+    | '/_authenticated/payroll/pay-runs'
+    | '/_authenticated/payroll/payslips'
+    | '/_authenticated/payroll/settings'
     | '/_authenticated/purchases/bills'
     | '/_authenticated/purchases/orders'
     | '/_authenticated/purchases/vendors'
@@ -590,6 +641,13 @@ declare module '@tanstack/react-router' {
       path: '/sync'
       fullPath: '/sync'
       preLoaderRoute: typeof AuthenticatedSyncRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reports': {
@@ -702,6 +760,27 @@ declare module '@tanstack/react-router' {
       path: '/purchases/bills'
       fullPath: '/purchases/bills'
       preLoaderRoute: typeof AuthenticatedPurchasesBillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payroll/settings': {
+      id: '/_authenticated/payroll/settings'
+      path: '/payroll/settings'
+      fullPath: '/payroll/settings'
+      preLoaderRoute: typeof AuthenticatedPayrollSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payroll/payslips': {
+      id: '/_authenticated/payroll/payslips'
+      path: '/payroll/payslips'
+      fullPath: '/payroll/payslips'
+      preLoaderRoute: typeof AuthenticatedPayrollPayslipsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payroll/pay-runs': {
+      id: '/_authenticated/payroll/pay-runs'
+      path: '/payroll/pay-runs'
+      fullPath: '/payroll/pay-runs'
+      preLoaderRoute: typeof AuthenticatedPayrollPayRunsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/items/stock-movements': {
@@ -850,6 +929,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
   AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedAccountingChartRoute: typeof AuthenticatedAccountingChartRoute
   AuthenticatedAccountingJournalsRoute: typeof AuthenticatedAccountingJournalsRoute
@@ -869,6 +949,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedItemsProductsRoute: typeof AuthenticatedItemsProductsRoute
   AuthenticatedItemsServicesRoute: typeof AuthenticatedItemsServicesRoute
   AuthenticatedItemsStockMovementsRoute: typeof AuthenticatedItemsStockMovementsRoute
+  AuthenticatedPayrollPayRunsRoute: typeof AuthenticatedPayrollPayRunsRoute
+  AuthenticatedPayrollPayslipsRoute: typeof AuthenticatedPayrollPayslipsRoute
+  AuthenticatedPayrollSettingsRoute: typeof AuthenticatedPayrollSettingsRoute
   AuthenticatedPurchasesBillsRoute: typeof AuthenticatedPurchasesBillsRoute
   AuthenticatedPurchasesOrdersRoute: typeof AuthenticatedPurchasesOrdersRoute
   AuthenticatedPurchasesVendorsRoute: typeof AuthenticatedPurchasesVendorsRoute
@@ -888,6 +971,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
   AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedAccountingChartRoute: AuthenticatedAccountingChartRoute,
   AuthenticatedAccountingJournalsRoute: AuthenticatedAccountingJournalsRoute,
@@ -909,6 +993,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedItemsProductsRoute: AuthenticatedItemsProductsRoute,
   AuthenticatedItemsServicesRoute: AuthenticatedItemsServicesRoute,
   AuthenticatedItemsStockMovementsRoute: AuthenticatedItemsStockMovementsRoute,
+  AuthenticatedPayrollPayRunsRoute: AuthenticatedPayrollPayRunsRoute,
+  AuthenticatedPayrollPayslipsRoute: AuthenticatedPayrollPayslipsRoute,
+  AuthenticatedPayrollSettingsRoute: AuthenticatedPayrollSettingsRoute,
   AuthenticatedPurchasesBillsRoute: AuthenticatedPurchasesBillsRoute,
   AuthenticatedPurchasesOrdersRoute: AuthenticatedPurchasesOrdersRoute,
   AuthenticatedPurchasesVendorsRoute: AuthenticatedPurchasesVendorsRoute,

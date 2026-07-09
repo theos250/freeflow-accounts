@@ -5,10 +5,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths,
-  format, isSameMonth, isToday,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  addMonths,
+  format,
+  isSameMonth,
+  isToday,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, FileText, Receipt, RefreshCw, Users, CalendarDays } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Receipt,
+  RefreshCw,
+  Users,
+  CalendarDays,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/calendar")({
   head: () => ({ meta: [{ title: "Calendar — Free Accounting" }] }),
@@ -29,10 +44,18 @@ type CalEvent = {
   linkTo: string;
 };
 
-const TYPE_META: Record<EventType, { label: string; color: string; dot: string; icon: typeof FileText }> = {
+const TYPE_META: Record<
+  EventType,
+  { label: string; color: string; dot: string; icon: typeof FileText }
+> = {
   invoice_due: { label: "Invoice due", color: "text-blue-600", dot: "bg-blue-500", icon: FileText },
   bill_due: { label: "Bill due", color: "text-amber-600", dot: "bg-amber-500", icon: Receipt },
-  recurring_invoice: { label: "Recurring invoice", color: "text-violet-600", dot: "bg-violet-500", icon: RefreshCw },
+  recurring_invoice: {
+    label: "Recurring invoice",
+    color: "text-violet-600",
+    dot: "bg-violet-500",
+    icon: RefreshCw,
+  },
 };
 
 function fmt(n: number, c = "USD") {
@@ -48,9 +71,22 @@ function CalendarPage() {
   async function load() {
     setLoading(true);
     const [inv, bills, recurring] = await Promise.all([
-      supabase.from("invoices").select("id,invoice_number,due_date,total,currency,status,customers(name)").not("due_date", "is", null).neq("status", "paid"),
-      (supabase as any).from("bills").select("id,bill_number,due_date,total,currency,status,vendors(name)").not("due_date", "is", null).neq("status", "paid"),
-      (supabase as any).from("recurring_invoices").select("id,next_run_date,frequency,customers(name),invoices:template_invoice_id(invoice_number,total,currency)").eq("is_active", true),
+      supabase
+        .from("invoices")
+        .select("id,invoice_number,due_date,total,currency,status,customers(name)")
+        .not("due_date", "is", null)
+        .neq("status", "paid"),
+      (supabase as any)
+        .from("bills")
+        .select("id,bill_number,due_date,total,currency,status,vendors(name)")
+        .not("due_date", "is", null)
+        .neq("status", "paid"),
+      (supabase as any)
+        .from("recurring_invoices")
+        .select(
+          "id,next_run_date,frequency,customers(name),invoices:template_invoice_id(invoice_number,total,currency)",
+        )
+        .eq("is_active", true),
     ]);
 
     const today = format(new Date(), "yyyy-MM-dd");
@@ -59,27 +95,41 @@ function CalendarPage() {
     for (const i of inv.data ?? []) {
       if (!i.due_date) continue;
       evs.push({
-        id: i.id, date: i.due_date, type: "invoice_due",
-        title: `Invoice ${i.invoice_number}`, subtitle: (i as any).customers?.name ?? "No customer",
-        amount: Number(i.total), currency: i.currency, overdue: i.due_date < today,
+        id: i.id,
+        date: i.due_date,
+        type: "invoice_due",
+        title: `Invoice ${i.invoice_number}`,
+        subtitle: (i as any).customers?.name ?? "No customer",
+        amount: Number(i.total),
+        currency: i.currency,
+        overdue: i.due_date < today,
         linkTo: "/invoices",
       });
     }
     for (const b of bills.data ?? []) {
       evs.push({
-        id: b.id, date: b.due_date, type: "bill_due",
-        title: `Bill ${b.bill_number}`, subtitle: (b as any).vendors?.name ?? "No vendor",
-        amount: Number(b.total), currency: b.currency, overdue: b.due_date < today,
+        id: b.id,
+        date: b.due_date,
+        type: "bill_due",
+        title: `Bill ${b.bill_number}`,
+        subtitle: (b as any).vendors?.name ?? "No vendor",
+        amount: Number(b.total),
+        currency: b.currency,
+        overdue: b.due_date < today,
         linkTo: "/purchases/bills",
       });
     }
     for (const r of recurring.data ?? []) {
       const tpl = (r as any).invoices;
       evs.push({
-        id: r.id, date: r.next_run_date, type: "recurring_invoice",
+        id: r.id,
+        date: r.next_run_date,
+        type: "recurring_invoice",
         title: `Recurring invoice${tpl?.invoice_number ? ` (${tpl.invoice_number})` : ""}`,
         subtitle: `${(r as any).customers?.name ?? "No customer"} · ${r.frequency}`,
-        amount: Number(tpl?.total ?? 0), currency: tpl?.currency ?? "USD", overdue: false,
+        amount: Number(tpl?.total ?? 0),
+        currency: tpl?.currency ?? "USD",
+        overdue: false,
         linkTo: "/sales/recurring",
       });
     }
@@ -87,7 +137,9 @@ function CalendarPage() {
     setEvents(evs);
     setLoading(false);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const gridStart = startOfWeek(startOfMonth(month));
   const gridEnd = endOfWeek(endOfMonth(month));
@@ -118,7 +170,9 @@ function CalendarPage() {
       <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold">Calendar</h1>
-          <p className="text-muted-foreground">Payment due dates, invoice reminders, and recurring invoices in one view.</p>
+          <p className="text-muted-foreground">
+            Payment due dates, invoice reminders, and recurring invoices in one view.
+          </p>
         </div>
         {overdueCount > 0 && <Badge variant="destructive">{overdueCount} overdue</Badge>}
       </div>
@@ -129,7 +183,9 @@ function CalendarPage() {
             <span className={`h-2 w-2 rounded-full ${TYPE_META[t].dot}`} /> {TYPE_META[t].label}
           </span>
         ))}
-        <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-red-600" /> Overdue</span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-red-600" /> Overdue
+        </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -138,14 +194,37 @@ function CalendarPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-lg">{format(month, "MMMM yyyy")}</h2>
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" onClick={() => setMonth((m) => addMonths(m, -1))}><ChevronLeft className="h-4 w-4" /></Button>
-                <Button variant="outline" size="sm" onClick={() => { setMonth(startOfMonth(new Date())); setSelectedDay(format(new Date(), "yyyy-MM-dd")); }}>Today</Button>
-                <Button variant="outline" size="icon" onClick={() => setMonth((m) => addMonths(m, 1))}><ChevronRight className="h-4 w-4" /></Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setMonth((m) => addMonths(m, -1))}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setMonth(startOfMonth(new Date()));
+                    setSelectedDay(format(new Date(), "yyyy-MM-dd"));
+                  }}
+                >
+                  Today
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setMonth((m) => addMonths(m, 1))}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 
             <div className="grid grid-cols-7 text-center text-xs font-medium text-muted-foreground mb-2">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => <div key={d}>{d}</div>)}
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div key={d}>{d}</div>
+              ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
               {days.map((d) => {
@@ -159,17 +238,28 @@ function CalendarPage() {
                     key={key}
                     onClick={() => setSelectedDay(key)}
                     className={`min-h-20 rounded-lg border p-1.5 text-left transition-colors ${
-                      isSelected ? "border-primary bg-primary/5" : "border-transparent hover:border-border"
+                      isSelected
+                        ? "border-primary bg-primary/5"
+                        : "border-transparent hover:border-border"
                     } ${!inMonth ? "opacity-40" : ""}`}
                   >
-                    <div className={`text-xs mb-1 inline-flex items-center justify-center h-5 w-5 rounded-full ${isToday(d) ? "bg-primary text-primary-foreground font-semibold" : ""}`}>
+                    <div
+                      className={`text-xs mb-1 inline-flex items-center justify-center h-5 w-5 rounded-full ${isToday(d) ? "bg-primary text-primary-foreground font-semibold" : ""}`}
+                    >
                       {format(d, "d")}
                     </div>
                     <div className="flex flex-wrap gap-0.5">
                       {dayEvents.slice(0, 4).map((e) => (
-                        <span key={e.id} className={`h-1.5 w-1.5 rounded-full ${e.overdue ? "bg-red-600" : TYPE_META[e.type].dot}`} />
+                        <span
+                          key={e.id}
+                          className={`h-1.5 w-1.5 rounded-full ${e.overdue ? "bg-red-600" : TYPE_META[e.type].dot}`}
+                        />
                       ))}
-                      {dayEvents.length > 4 && <span className="text-[10px] text-muted-foreground">+{dayEvents.length - 4}</span>}
+                      {dayEvents.length > 4 && (
+                        <span className="text-[10px] text-muted-foreground">
+                          +{dayEvents.length - 4}
+                        </span>
+                      )}
                     </div>
                     {hasOverdue && <div className="text-[10px] text-red-600 mt-0.5">overdue</div>}
                   </button>
@@ -189,7 +279,11 @@ function CalendarPage() {
                 {selectedEvents.map((e) => {
                   const Icon = TYPE_META[e.type].icon;
                   return (
-                    <Link key={e.id} to={e.linkTo} className="flex items-center justify-between rounded-lg border p-2.5 hover:bg-muted/50 transition-colors">
+                    <Link
+                      key={e.id}
+                      to={e.linkTo}
+                      className="flex items-center justify-between rounded-lg border p-2.5 hover:bg-muted/50 transition-colors"
+                    >
                       <div className="flex items-center gap-2.5">
                         <Icon className={`h-4 w-4 ${TYPE_META[e.type].color}`} />
                         <div>
@@ -199,7 +293,11 @@ function CalendarPage() {
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-medium">{fmt(e.amount, e.currency)}</div>
-                        {e.overdue && <Badge variant="destructive" className="text-[10px]">Overdue</Badge>}
+                        {e.overdue && (
+                          <Badge variant="destructive" className="text-[10px]">
+                            Overdue
+                          </Badge>
+                        )}
                       </div>
                     </Link>
                   );
@@ -211,7 +309,9 @@ function CalendarPage() {
 
         <div className="space-y-4">
           <div className="bg-card border rounded-xl p-4">
-            <h3 className="font-semibold mb-3 flex items-center gap-2"><CalendarDays className="h-4 w-4" /> Next 30 days</h3>
+            <h3 className="font-semibold mb-3 flex items-center gap-2">
+              <CalendarDays className="h-4 w-4" /> Next 30 days
+            </h3>
             {loading ? (
               <p className="text-sm text-muted-foreground">Loading…</p>
             ) : upcoming.length === 0 ? (
@@ -221,12 +321,18 @@ function CalendarPage() {
                 {upcoming.map((e) => {
                   const Icon = TYPE_META[e.type].icon;
                   return (
-                    <Link key={e.id} to={e.linkTo} className="flex items-center justify-between text-sm rounded-md hover:bg-muted/50 p-1.5 -mx-1.5 transition-colors">
+                    <Link
+                      key={e.id}
+                      to={e.linkTo}
+                      className="flex items-center justify-between text-sm rounded-md hover:bg-muted/50 p-1.5 -mx-1.5 transition-colors"
+                    >
                       <div className="flex items-center gap-2 min-w-0">
                         <Icon className={`h-3.5 w-3.5 shrink-0 ${TYPE_META[e.type].color}`} />
                         <span className="truncate">{e.title}</span>
                       </div>
-                      <span className={`shrink-0 text-xs ${e.overdue ? "text-red-600 font-medium" : "text-muted-foreground"}`}>
+                      <span
+                        className={`shrink-0 text-xs ${e.overdue ? "text-red-600 font-medium" : "text-muted-foreground"}`}
+                      >
                         {format(new Date(e.date), "MMM d")}
                       </span>
                     </Link>
@@ -237,9 +343,12 @@ function CalendarPage() {
           </div>
 
           <div className="bg-card border rounded-xl p-4">
-            <h3 className="font-semibold mb-2 flex items-center gap-2"><Users className="h-4 w-4" /> Employee events</h3>
+            <h3 className="font-semibold mb-2 flex items-center gap-2">
+              <Users className="h-4 w-4" /> Employee events
+            </h3>
             <p className="text-sm text-muted-foreground">
-              Birthdays, work anniversaries, and leave will show up here once the HR module is built out. Nothing to fake in the meantime.
+              Birthdays, work anniversaries, and leave will show up here once the HR module is built
+              out. Nothing to fake in the meantime.
             </p>
           </div>
         </div>

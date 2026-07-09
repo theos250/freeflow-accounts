@@ -61,9 +61,7 @@ export default function CompaniesPage() {
   const [pendingArchive, setPendingArchive] = useState<CompanyWithMembership | null>(null);
 
   const filtered = useMemo(() => {
-    let result = companies.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
-    );
+    let result = companies.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
     if (status !== "all") result = result.filter((c) => c.status === status);
 
     result = [...result].sort((a, b) => {
@@ -83,7 +81,11 @@ export default function CompaniesPage() {
       .eq("id", company.id);
 
     if (updateErr) {
-      toast({ title: "Couldn't update company", description: updateErr.message, variant: "destructive" });
+      toast({
+        title: "Couldn't update company",
+        description: updateErr.message,
+        variant: "destructive",
+      });
       return;
     }
     toast({ title: nextStatus === "archived" ? "Company archived" : "Company restored" });
@@ -94,7 +96,11 @@ export default function CompaniesPage() {
   const handleDelete = async (company: CompanyWithMembership) => {
     const { error: deleteErr } = await supabase.from("companies").delete().eq("id", company.id);
     if (deleteErr) {
-      toast({ title: "Couldn't delete company", description: deleteErr.message, variant: "destructive" });
+      toast({
+        title: "Couldn't delete company",
+        description: deleteErr.message,
+        variant: "destructive",
+      });
       return;
     }
     toast({ title: "Company deleted" });
@@ -278,7 +284,10 @@ export default function CompaniesPage() {
         </div>
       )}
 
-      <AlertDialog open={!!pendingArchive} onOpenChange={(open) => !open && setPendingArchive(null)}>
+      <AlertDialog
+        open={!!pendingArchive}
+        onOpenChange={(open) => !open && setPendingArchive(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -292,7 +301,9 @@ export default function CompaniesPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => pendingArchive && handleArchiveToggle(pendingArchive)}>
+            <AlertDialogAction
+              onClick={() => pendingArchive && handleArchiveToggle(pendingArchive)}
+            >
               Confirm
             </AlertDialogAction>
           </AlertDialogFooter>

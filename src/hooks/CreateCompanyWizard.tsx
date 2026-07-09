@@ -106,7 +106,10 @@ export default function CreateCompanyWizard() {
         <p className="mt-2 text-muted-foreground">
           Upgrade your subscription to create more companies.
           {companyLimit !== null && (
-            <> You're currently using {companies.length} of {companyLimit}.</>
+            <>
+              {" "}
+              You're currently using {companies.length} of {companyLimit}.
+            </>
           )}
         </p>
         <div className="mt-6 flex justify-center gap-3">
@@ -129,7 +132,7 @@ export default function CreateCompanyWizard() {
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-medium",
                 i < step && "border-primary bg-primary text-primary-foreground",
                 i === step && "border-primary text-primary",
-                i > step && "border-muted text-muted-foreground"
+                i > step && "border-muted text-muted-foreground",
               )}
             >
               {i < step ? <Check className="h-4 w-4" /> : i + 1}
@@ -204,10 +207,14 @@ export default function CreateCompanyWizard() {
                 <div className="space-y-2">
                   <Label>Currency *</Label>
                   <Select value={form.currency} onValueChange={(v) => update("currency", v)}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       {CURRENCIES.map((c) => (
-                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -217,10 +224,14 @@ export default function CreateCompanyWizard() {
                 <div className="space-y-2">
                   <Label>Timezone *</Label>
                   <Select value={form.timezone} onValueChange={(v) => update("timezone", v)}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       {TIMEZONES.map((tz) => (
-                        <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+                        <SelectItem key={tz} value={tz}>
+                          {tz}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -228,10 +239,14 @@ export default function CreateCompanyWizard() {
                 <div className="space-y-2">
                   <Label>Language *</Label>
                   <Select value={form.language} onValueChange={(v) => update("language", v)}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       {LANGUAGES.map((l) => (
-                        <SelectItem key={l.code} value={l.code}>{l.label}</SelectItem>
+                        <SelectItem key={l.code} value={l.code}>
+                          {l.label}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -243,7 +258,9 @@ export default function CreateCompanyWizard() {
                   value={String(form.fiscal_year_start)}
                   onValueChange={(v) => update("fiscal_year_start", Number(v))}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {Array.from({ length: 12 }).map((_, i) => (
                       <SelectItem key={i} value={String(i + 1)}>
@@ -256,11 +273,17 @@ export default function CreateCompanyWizard() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Tax Number</Label>
-                  <Input value={form.tax_number} onChange={(e) => update("tax_number", e.target.value)} />
+                  <Input
+                    value={form.tax_number}
+                    onChange={(e) => update("tax_number", e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>VAT Number</Label>
-                  <Input value={form.vat_number} onChange={(e) => update("vat_number", e.target.value)} />
+                  <Input
+                    value={form.vat_number}
+                    onChange={(e) => update("vat_number", e.target.value)}
+                  />
                 </div>
               </div>
             </>
@@ -279,7 +302,11 @@ export default function CreateCompanyWizard() {
                 </div>
                 <div className="space-y-2">
                   <Label>Email</Label>
-                  <Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+                  <Input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => update("email", e.target.value)}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -306,7 +333,7 @@ export default function CreateCompanyWizard() {
                     "rounded-lg border p-4 text-left text-sm font-medium transition-colors",
                     form.starter_template === key
                       ? "border-primary bg-primary/5 text-primary"
-                      : "border-border hover:bg-muted"
+                      : "border-border hover:bg-muted",
                   )}
                 >
                   {STARTER_TEMPLATE_LABELS[key]}
@@ -328,12 +355,16 @@ export default function CreateCompanyWizard() {
                   onChange={(e) => setInviteEmail(e.target.value)}
                 />
                 <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as CompanyRole)}>
-                  <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-44">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {(Object.keys(COMPANY_ROLE_LABELS) as CompanyRole[])
                       .filter((r) => r !== "owner")
                       .map((r) => (
-                        <SelectItem key={r} value={r}>{COMPANY_ROLE_LABELS[r]}</SelectItem>
+                        <SelectItem key={r} value={r}>
+                          {COMPANY_ROLE_LABELS[r]}
+                        </SelectItem>
                       ))}
                   </SelectContent>
                 </Select>
@@ -342,7 +373,10 @@ export default function CreateCompanyWizard() {
                   variant="outline"
                   disabled={!inviteEmail.includes("@")}
                   onClick={() => {
-                    update("invites", [...(form.invites ?? []), { email: inviteEmail, role: inviteRole }]);
+                    update("invites", [
+                      ...(form.invites ?? []),
+                      { email: inviteEmail, role: inviteRole },
+                    ]);
                     setInviteEmail("");
                   }}
                 >
@@ -352,15 +386,23 @@ export default function CreateCompanyWizard() {
               {!!form.invites?.length && (
                 <ul className="space-y-1 text-sm">
                   {form.invites.map((inv, i) => (
-                    <li key={i} className="flex items-center justify-between rounded-md border px-3 py-2">
+                    <li
+                      key={i}
+                      className="flex items-center justify-between rounded-md border px-3 py-2"
+                    >
                       <span>{inv.email}</span>
                       <span className="flex items-center gap-3">
-                        <span className="text-muted-foreground">{COMPANY_ROLE_LABELS[inv.role]}</span>
+                        <span className="text-muted-foreground">
+                          {COMPANY_ROLE_LABELS[inv.role]}
+                        </span>
                         <button
                           type="button"
                           className="text-xs text-destructive"
                           onClick={() =>
-                            update("invites", form.invites?.filter((_, idx) => idx !== i))
+                            update(
+                              "invites",
+                              form.invites?.filter((_, idx) => idx !== i),
+                            )
                           }
                         >
                           Remove

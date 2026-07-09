@@ -223,8 +223,7 @@ export function AppSidebar() {
 
     const storedId =
       typeof window !== "undefined" ? localStorage.getItem("currentCompanyId") : null;
-    const active =
-      list.find((c) => c.id === storedId) ?? list.find((c) => c.is_default) ?? list[0];
+    const active = list.find((c) => c.id === storedId) ?? list.find((c) => c.is_default) ?? list[0];
 
     if (active) setCurrentCompanyId(active.id);
 
@@ -324,7 +323,9 @@ export function AppSidebar() {
           <div className="h-8 w-8 rounded-lg bg-gradient-hero flex items-center justify-center text-white font-bold text-sm shrink-0">
             FF
           </div>
-          {!collapsed && <span className="font-bold text-base gradient-text">FreeFlow Accounts</span>}
+          {!collapsed && (
+            <span className="font-bold text-base gradient-text">FreeFlow Accounts</span>
+          )}
         </Link>
       </SidebarHeader>
 
