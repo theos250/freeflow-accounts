@@ -64,16 +64,9 @@ type NavGroup = {
   items?: NavItem[];
 };
 
-// Plan tiers and company limits.
-// TODO: once the subscriptions/billing table exists, replace `planKey`
-// below with the real value fetched from that table instead of the
-// hardcoded "free" default.
-const PLAN_LIMITS: Record<string, number> = {
-  free: 1,
-  pro: 3,
-  business: 10,
-  enterprise: Infinity,
-};
+// Plan tiers. The source of truth is now the `subscriptions` table
+// (company_limit = null means unlimited / enterprise).
+const PLAN_ORDER = ["free", "pro", "business", "enterprise"] as const;
 
 const PLAN_LABELS: Record<string, string> = {
   free: "Free",
@@ -169,6 +162,7 @@ const navGroups: NavGroup[] = [
 ];
 
 type Company = { id: string; name: string; is_default: boolean };
+type Subscription = { plan: string; company_limit: number | null };
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -185,13 +179,15 @@ export function AppSidebar() {
 
   const [search, setSearch] = useState("");
 
-  // TODO: replace with the real plan once subscriptions/billing exists.
-  const planKey = "free";
-  const planLabel = PLAN_LABELS[planKey];
-  const companyLimit = PLAN_LIMITS[planKey];
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
+
+  const planKey = subscription?.plan ?? "free";
+  const planLabel = PLAN_LABELS[planKey] ?? planKey;
+  const companyLimit = subscription?.company_limit ?? null; // null = unlimited
   const companiesUsed = companies.length;
   const usagePct =
-    companyLimit === Infinity ? 100 : Math.min(100, (companiesUsed / companyLimit) * 100);
+    companyLimit === null ? 100 : Math.min(100, (companiesUsed / companyLimit) * 100);
 
   useEffect(() => {
     loadUserAndCompanies();
@@ -205,13 +201,18 @@ export function AppSidebar() {
 
     setEmail(user.email ?? "");
 
-    const [{ data: profile }, { data: companyRows }] = await Promise.all([
+    const [{ data: profile }, { data: companyRows }, { data: subRow }] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("id", user.id).single(),
       supabase
         .from("companies")
         .select("id, name, is_default")
         .eq("user_id", user.id)
         .order("created_at", { ascending: true }),
+      supabase
+        .from("subscriptions")
+        .select("plan, company_limit")
+        .eq("user_id", user.id)
+        .maybeSingle(),
     ]);
 
     setFullName(profile?.full_name ?? "");
@@ -226,6 +227,50 @@ export function AppSidebar() {
       list.find((c) => c.id === storedId) ?? list.find((c) => c.is_default) ?? list[0];
 
     if (active) setCurrentCompanyId(active.id);
+
+    if (subRow) {
+      setSubscription(subRow);
+    } else {
+      // Safety net: the subscriptions table has a trigger that creates a
+      // free row for every new signup, but if this account predates that
+      // trigger (or the row was somehow deleted), create it here instead
+      // of leaving the plan section blank.
+      const { data: created } = await supabase
+        .from("subscriptions")
+        .upsert({ user_id: user.id, plan: "free", company_limit: 1 }, { onConflict: "user_id" })
+        .select("plan, company_limit")
+        .single();
+      if (created) setSubscription(created);
+    }
+  }
+
+  // Demo upgrade flow: cycles to the next tier via the update_own_plan RPC,
+  // which is the only way plan changes are allowed to persist (see the
+  // migration — there's no client-side UPDATE policy on subscriptions).
+  // Replace this with your real Stripe/Flutterwave checkout + webhook once
+  // billing is built; the webhook should call the same RPC (or update the
+  // row directly with the service role).
+  async function handleUpgradeClick() {
+    const currentIndex = PLAN_ORDER.indexOf(planKey as (typeof PLAN_ORDER)[number]);
+    const nextPlan = PLAN_ORDER[currentIndex + 1];
+
+    if (!nextPlan) {
+      toast.info("You're already on the top tier.");
+      return;
+    }
+
+    setUpgrading(true);
+    const { data, error } = await supabase.rpc("update_own_plan", { new_plan: nextPlan });
+    setUpgrading(false);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    if (data) {
+      setSubscription({ plan: data.plan, company_limit: data.company_limit });
+      toast.success(`Upgraded to ${PLAN_LABELS[data.plan]}`);
+    }
   }
 
   function switchCompany(id: string) {
@@ -411,7 +456,7 @@ export function AppSidebar() {
                 </div>
                 {!collapsed && (
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                    {companyLimit === Infinity ? "Unlimited" : `${companiesUsed}/${companyLimit}`}
+                    {companyLimit === null ? "Unlimited" : `${companiesUsed}/${companyLimit}`}
                   </Badge>
                 )}
               </div>
@@ -419,15 +464,18 @@ export function AppSidebar() {
                 <>
                   <Progress value={usagePct} className="h-1.5" />
                   <p className="text-xs text-muted-foreground">
-                    {companiesUsed}/{companyLimit === Infinity ? "∞" : companyLimit} companies
+                    {companiesUsed}/{companyLimit === null ? "∞" : companyLimit} companies
                   </p>
-                  <Button
-                    size="sm"
-                    className="w-full h-7 text-xs"
-                    onClick={() => navigate({ to: "/settings" })}
-                  >
-                    Upgrade
-                  </Button>
+                  {planKey !== "enterprise" && (
+                    <Button
+                      size="sm"
+                      className="w-full h-7 text-xs"
+                      disabled={upgrading}
+                      onClick={handleUpgradeClick}
+                    >
+                      {upgrading ? "Upgrading…" : "Upgrade"}
+                    </Button>
+                  )}
                 </>
               )}
             </div>
