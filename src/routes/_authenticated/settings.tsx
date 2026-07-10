@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { SettingsPage } from "./settings-page";
+import { SettingsPage } from "@/components/settings-page";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({ meta: [{ title: "Settings — Free Accounting" }] }),

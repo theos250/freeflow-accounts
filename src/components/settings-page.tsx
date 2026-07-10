@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "@/hooks/useSettings";
 import { WorkspaceSettingsForm } from "./workspace-settings-form";
 import { InvoicingSettingsForm } from "./invoicing-settings-form";
 import { NotificationSettingsForm } from "./notification-settings-form";
