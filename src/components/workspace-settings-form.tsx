@@ -2,11 +2,7 @@ import { useState } from "react";
 import type { WorkspaceSettings } from "../../hooks/useSettings";
 
 const CURRENCIES = ["USD", "EUR", "GBP", "CAD", "AUD", "NGN", "ZAR", "KES"];
-const DATE_FORMATS: WorkspaceSettings["dateFormat"][] = [
-  "MM/DD/YYYY",
-  "DD/MM/YYYY",
-  "YYYY-MM-DD",
-];
+const DATE_FORMATS: WorkspaceSettings["dateFormat"][] = ["MM/DD/YYYY", "DD/MM/YYYY", "YYYY-MM-DD"];
 
 // A trimmed-down list is safer than Intl.supportedValuesOf("timeZone") for
 // older browsers. Swap for the full IANA list if you don't need to support them.
@@ -99,7 +95,10 @@ export function WorkspaceSettingsForm({ settings, saving, onSave }: Props) {
         <select
           value={form.dateFormat}
           onChange={(e) =>
-            setForm((f) => ({ ...f, dateFormat: e.target.value as WorkspaceSettings["dateFormat"] }))
+            setForm((f) => ({
+              ...f,
+              dateFormat: e.target.value as WorkspaceSettings["dateFormat"],
+            }))
           }
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
         >

@@ -35,10 +35,7 @@ export function CompanySwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex w-56 items-center justify-between gap-2 px-2"
-        >
+        <Button variant="outline" className="flex w-56 items-center justify-between gap-2 px-2">
           <span className="flex min-w-0 items-center gap-2">
             <Avatar className="h-6 w-6 rounded-md">
               <AvatarImage src={currentCompany.logo_url ?? undefined} alt={currentCompany.name} />

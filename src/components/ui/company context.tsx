@@ -2,14 +2,7 @@
 //   - Supabase client lives at "@/integrations/supabase/client" (Lovable default)
 //   - You have an auth hook/context exposing the current user, e.g. "@/hooks/useAuth"
 //   - Toasts come from "@/hooks/use-toast" (shadcn default)
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -43,8 +36,8 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   const [companies, setCompanies] = useState<CompanyWithMembership[]>([]);
-  const [currentCompanyId, setCurrentCompanyId] = useState<string | null>(
-    () => localStorage.getItem(ACTIVE_COMPANY_STORAGE_KEY)
+  const [currentCompanyId, setCurrentCompanyId] = useState<string | null>(() =>
+    localStorage.getItem(ACTIVE_COMPANY_STORAGE_KEY),
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,9 +62,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 
       if (memberErr) throw memberErr;
 
-      const { data: counts } = await supabase
-        .from("company_members")
-        .select("company_id");
+      const { data: counts } = await supabase.from("company_members").select("company_id");
 
       const countByCompany = new Map<string, number>();
       (counts ?? []).forEach((row: { company_id: string }) => {
@@ -168,7 +159,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       if (insertErr) {
         if (insertErr.message.includes("row-level security")) {
           throw new Error(
-            "You've reached your company limit. Upgrade your subscription to create more companies."
+            "You've reached your company limit. Upgrade your subscription to create more companies.",
           );
         }
         throw insertErr;
@@ -204,7 +195,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 
       return company as Company;
     },
-    [user, fetchCompanies, switchCompany, toast]
+    [user, fetchCompanies, switchCompany, toast],
   );
 
   const currentCompany = companies.find((c) => c.id === currentCompanyId) ?? null;
