@@ -1,96 +1,172 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export interface Settings {
-  id: string;
-  workspace_name: string;
-  workspace_logo?: string;
+export interface WorkspaceSettings {
+  userId: string;
+  workspaceName: string;
+  logoUrl: string | null;
   currency: string;
   timezone: string;
-  invoice_prefix: string;
-  invoice_number_format: string;
-  notify_invoices: boolean;
-  notify_payments: boolean;
-  notify_expenses: boolean;
-  updated_at?: string;
+  dateFormat: "MM/DD/YYYY" | "DD/MM/YYYY" | "YYYY-MM-DD";
+  invoicePrefix: string;
+  invoiceNextNumber: number;
+  defaultPaymentTermsDays: number;
+  defaultInvoiceNotes: string | null;
+  notifyPaymentReceived: boolean;
+  notifyInvoiceOverdue: boolean;
+  notifyWeeklySummary: boolean;
+  theme: "light" | "dark" | "system";
 }
 
-export function useSettings(supabase: SupabaseClient, userId: string) {
-  const [settings, setSettings] = useState<Settings | null>(null);
+type SettingsUpdate = Partial<Omit<WorkspaceSettings, "userId">>;
+
+interface UseSettingsResult {
+  loading: boolean;
+  saving: boolean;
+  error: string | null;
+  settings: WorkspaceSettings | null;
+  updateSettings: (patch: SettingsUpdate) => Promise<{ success: boolean; error?: string }>;
+}
+
+function fromRow(row: any): WorkspaceSettings {
+  return {
+    userId: row.user_id,
+    workspaceName: row.workspace_name,
+    logoUrl: row.logo_url,
+    currency: row.currency,
+    timezone: row.timezone,
+    dateFormat: row.date_format,
+    invoicePrefix: row.invoice_prefix,
+    invoiceNextNumber: row.invoice_next_number,
+    defaultPaymentTermsDays: row.default_payment_terms_days,
+    defaultInvoiceNotes: row.default_invoice_notes,
+    notifyPaymentReceived: row.notify_payment_received,
+    notifyInvoiceOverdue: row.notify_invoice_overdue,
+    notifyWeeklySummary: row.notify_weekly_summary,
+    theme: row.theme,
+  };
+}
+
+function toRow(patch: SettingsUpdate): Record<string, unknown> {
+  const map: Record<keyof SettingsUpdate, string> = {
+    workspaceName: "workspace_name",
+    logoUrl: "logo_url",
+    currency: "currency",
+    timezone: "timezone",
+    dateFormat: "date_format",
+    invoicePrefix: "invoice_prefix",
+    invoiceNextNumber: "invoice_next_number",
+    defaultPaymentTermsDays: "default_payment_terms_days",
+    defaultInvoiceNotes: "default_invoice_notes",
+    notifyPaymentReceived: "notify_payment_received",
+    notifyInvoiceOverdue: "notify_invoice_overdue",
+    notifyWeeklySummary: "notify_weekly_summary",
+    theme: "theme",
+  };
+  const row: Record<string, unknown> = {};
+  for (const key in patch) {
+    const typedKey = key as keyof SettingsUpdate;
+    // @ts-ignore - dynamic mapping
+    row[map[typedKey]] = patch[typedKey];
+  }
+  return row;
+}
+
+/**
+ * Loads and updates the current user's workspace settings.
+ * Expects `supabase` to be an already-authenticated client and `userId` to
+ * be the logged-in user's id.
+ */
+export function useSettings(supabase: SupabaseClient, userId: string | null): UseSettingsResult {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [settings, setSettings] = useState<WorkspaceSettings | null>(null);
 
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
 
-        const { data, error: fetchError } = await supabase
-          .from("settings")
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    (async () => {
+      const { data, error: fetchError } = await supabase
+        .from("workspace_settings")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (fetchError) {
+        setError(fetchError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Row should exist via the auto-create trigger, but fall back to
+      // inserting one client-side in case this user predates the migration
+      // and the backfill somehow missed them.
+      if (!data) {
+        const { data: created, error: insertError } = await supabase
+          .from("workspace_settings")
+          .insert({ user_id: userId })
           .select("*")
-          .eq("user_id", userId)
           .single();
 
-        if (fetchError) {
-          if (fetchError.code === "PGRST116") {
-            // No settings found, this is ok
-            setSettings(null);
-          } else {
-            setError(fetchError.message);
-          }
-        } else {
-          setSettings(data);
+        if (cancelled) return;
+
+        if (insertError) {
+          setError(insertError.message);
+          setLoading(false);
+          return;
         }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load settings");
-      } finally {
-        setLoading(false);
+        setSettings(fromRow(created));
+      } else {
+        setSettings(fromRow(data));
       }
+
+      setLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
     };
+  }, [supabase, userId]);
 
-    if (userId) {
-      loadSettings();
-    }
-  }, [userId, supabase]);
+  const updateSettings = useCallback(
+    async (patch: SettingsUpdate) => {
+      if (!userId) return { success: false, error: "Not signed in" };
 
-  const updateSettings = async (updates: Partial<Settings>) => {
-    try {
       setSaving(true);
       setError(null);
 
-      const { error: updateError } = await supabase
-        .from("settings")
-        .upsert(
-          {
-            ...settings,
-            ...updates,
-            user_id: userId,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "user_id" }
-        )
-        .select()
+      // Optimistic update.
+      setSettings((prev) => (prev ? { ...prev, ...patch } : prev));
+
+      const { data, error: updateError } = await supabase
+        .from("workspace_settings")
+        .update(toRow(patch))
+        .eq("user_id", userId)
+        .select("*")
         .single();
+
+      setSaving(false);
 
       if (updateError) {
         setError(updateError.message);
-      } else {
-        setSettings((prev) => (prev ? { ...prev, ...updates } : null));
+        return { success: false, error: updateError.message };
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update settings");
-    } finally {
-      setSaving(false);
-    }
-  };
 
-  return {
-    settings,
-    loading,
-    saving,
-    error,
-    updateSettings,
-  };
+      setSettings(fromRow(data));
+      return { success: true };
+    },
+    [supabase, userId],
+  );
+
+  return { loading, saving, error, settings, updateSettings };
 }
