@@ -609,6 +609,38 @@ function CTA() {
 }
 
 function Footer() {
+  const footerLinks = [
+    {
+      title: "Product",
+      links: [
+        { label: "Features", to: "/features" },
+        { label: "Pricing", to: "/pricing" },
+        { label: "AI Bookkeeper", to: "/ai-bookkeeper" },
+        { label: "Integrations", to: "/integrations" },
+        { label: "Changelog", to: "/changelog" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About", to: "/about" },
+        { label: "Blog", to: "/blog" },
+        { label: "Careers", to: "/careers" },
+        { label: "Press", to: "/press" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "Help center", to: "/help" },
+        { label: "Guides", to: "/guides" },
+        { label: "Contact", to: "/contact" },
+        { label: "Privacy", to: "/privacy" },
+        { label: "Terms", to: "/terms" },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-border bg-card/30">
       <div className="mx-auto max-w-7xl px-6 py-12">
@@ -625,25 +657,18 @@ function Footer() {
               you.
             </p>
           </div>
-          {[
-            {
-              title: "Product",
-              links: ["Features", "Pricing", "AI Bookkeeper", "Integrations", "Changelog"],
-            },
-            { title: "Company", links: ["About", "Blog", "Careers", "Press"] },
-            { title: "Resources", links: ["Help center", "Guides", "Contact", "Privacy", "Terms"] },
-          ].map((c) => (
+          {footerLinks.map((c) => (
             <div key={c.title}>
               <div className="text-sm font-semibold">{c.title}</div>
               <ul className="mt-3 space-y-2">
                 {c.links.map((l) => (
-                  <li key={l}>
-                    <a
-                      href="#"
+                  <li key={l.label}>
+                    <Link
+                      to={l.to}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {l}
-                    </a>
+                      {l.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
