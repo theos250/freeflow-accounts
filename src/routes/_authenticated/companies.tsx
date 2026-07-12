@@ -61,28 +61,52 @@ function CompanyPage() {
     setLogoDisplay(data?.signedUrl ?? null);
   }
 
+async function loadActiveCompany(userIdArg: string) {
+    const activeId = typeof window !== "undefined" ? localStorage.getItem("currentCompanyId") : null;
+
+    const companyQuery = activeId
+      ? supabase.from("companies").select("*").eq("id", activeId).maybeSingle()
+      : supabase
+          .from("companies")
+          .select("*")
+          .order("created_at")
+          .limit(1)
+          .maybeSingle();
+
+    const [{ data: c }, { data: p }] = await Promise.all([
+      companyQuery,
+      supabase.from("profiles").select("default_currency").eq("id", userIdArg).maybeSingle(),
+    ]);
+
+    if (c) {
+      setCompany({ ...EMPTY, ...c } as Company);
+      refreshLogoDisplay((c as any).logo_url ?? null);
+    } else {
+      // no companies at all yet (shouldn't normally happen post-signup, but
+      // don't silently keep showing stale state from a previous company)
+      setCompany(EMPTY);
+      setLogoDisplay(null);
+    }
+    if (p?.default_currency) setProfileCurrency(p.default_currency);
+  }
+
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return;
       setUserId(u.user.id);
-      const [{ data: c }, { data: p }] = await Promise.all([
-        supabase
-          .from("companies")
-          .select("*")
-          .eq("user_id", u.user.id)
-          .order("created_at")
-          .limit(1)
-          .maybeSingle(),
-        supabase.from("profiles").select("default_currency").eq("id", u.user.id).maybeSingle(),
-      ]);
-      if (c) {
-        setCompany({ ...EMPTY, ...c } as Company);
-        refreshLogoDisplay((c as any).logo_url ?? null);
-      }
-      if (p?.default_currency) setProfileCurrency(p.default_currency);
+      await loadActiveCompany(u.user.id);
     })();
-  }, []);
+
+    function handleCompanyChanged() {
+      const { data } = supabase.auth.getSession() as any;
+      // getSession() is sync-ish here only for the cached session; simplest
+      // safe approach is to just re-run with the userId we already have.
+      if (userId) loadActiveCompany(userId);
+    }
+    window.addEventListener("company-changed", handleCompanyChanged);
+    return () => window.removeEventListener("company-changed", handleCompanyChanged);
+  }, [userId]);
 
   async function uploadLogo(file: File) {
     if (!userId) return;
