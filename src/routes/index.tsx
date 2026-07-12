@@ -618,7 +618,7 @@ function Footer() {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-hero">
                 <Wallet className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
               </div>
-              <span className="text-lg font-bold tracking-tight">Free Accounting</span>
+              <span className="text-lg font-bold tracking-tight">Finflow Tracck</span>
             </Link>
             <p className="mt-3 max-w-sm text-sm text-muted-foreground">
               100% free accounting software for small businesses worldwide. Built modern, built for
