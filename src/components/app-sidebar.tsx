@@ -55,6 +55,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
+import { CreateCompanyModal } from "@/components/CreateCompanyModal";
 
 type NavItem = { label: string; to: string };
 type NavGroup = {
