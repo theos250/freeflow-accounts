@@ -15,7 +15,7 @@ import {
   UserCircle2,
   Wallet,
 } from "lucide-react";
-import { blogArticles, blogCategories, editorialTeam } from "../blog-data";
+import { blogArticles, blogCategories, editorialTeam } from "./blog-data";
 
 export const Route = createFileRoute("/blog")({
   component: BlogPage,
