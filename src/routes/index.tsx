@@ -25,13 +25,13 @@ import heroImage from "@/assets/hero-dashboard.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Free Accounting — 100% Free Accounting Software for Small Businesses" },
+      { title: "FinFlow Track — 100% Free Accounting Software for Small Businesses" },
       {
         name: "description",
         content:
           "Modern, free accounting software for freelancers, small businesses, startups, NGOs, and African SMEs. Invoicing, expenses, multi-currency, AI bookkeeping. Free forever.",
       },
-      { property: "og:title", content: "Free Accounting — 100% Free Accounting Software" },
+      { property: "og:title", content: "FinFlow Track — 100% Free Accounting Software" },
       {
         property: "og:description",
         content: "Beautiful, modern accounting for small businesses worldwide. Free forever.",
@@ -186,7 +186,7 @@ function Header() {
             AI
           </a>
           <a
-            href="#pricing"
+            href="pricing"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Pricing
