@@ -15,7 +15,7 @@ import {
   getArticleBySlug,
   getCategoryBySlug,
   getRelatedArticles,
-} from "../blog-data";
+} from "./blog-data";
 
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogArticlePage,
