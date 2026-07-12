@@ -335,4 +335,4 @@ function PricingPage() {
               </Link>
 
 
-            </div>
+            </div/>
