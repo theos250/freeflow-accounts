@@ -174,13 +174,13 @@ function Header() {
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           <a
-            href="#features"
+            href="features"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Features
           </a>
           <a
-            href="#ai"
+            href="ai"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             AI
@@ -192,7 +192,7 @@ function Header() {
             Pricing
           </a>
           <a
-            href="#audience"
+            href="audience"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Who it's for
