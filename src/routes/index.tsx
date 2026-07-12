@@ -180,7 +180,7 @@ function Header() {
             Features
           </a>
           <a
-            href="ai"
+            href="#ai"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             AI
