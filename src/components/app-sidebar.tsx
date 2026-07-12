@@ -177,6 +177,7 @@ export function AppSidebar() {
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [currentCompanyId, setCurrentCompanyId] = useState<string | null>(null);
+  const [createCompanyOpen, setCreateCompanyOpen] = useState(false);
 
   const [search, setSearch] = useState("");
 
@@ -202,13 +203,14 @@ export function AppSidebar() {
 
     setEmail(user.email ?? "");
 
-    const [{ data: profile }, { data: companyRows }, { data: subRow }] = await Promise.all([
+const [{ data: profile }, { data: memberRows }, { data: subRow }] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("id", user.id).single(),
       supabase
-        .from("companies")
-        .select("id, name, is_default")
+        .from("company_members")
+        .select("company:companies(id, name, is_default, created_at)")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: true }),
+        .eq("status", "active")
+        .order("created_at", { referencedTable: "companies", ascending: true }),
       supabase
         .from("subscriptions")
         .select("plan, company_limit")
@@ -219,7 +221,9 @@ export function AppSidebar() {
     setFullName(profile?.full_name ?? "");
     setAvatarUrl(profile?.avatar_url ?? null);
 
-    const list = companyRows ?? [];
+    const list = (memberRows ?? [])
+      .map((r: any) => r.company)
+      .filter(Boolean) as Company[];
     setCompanies(list);
 
     const storedId =
@@ -361,14 +365,23 @@ export function AppSidebar() {
                   {c.id === currentCompanyId && <Check className="h-4 w-4 text-primary shrink-0" />}
                 </DropdownMenuItem>
               ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate({ to: "/companies" })}>
+<DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setCreateCompanyOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" /> Add company
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       )}
+
+      <CreateCompanyModal
+        open={createCompanyOpen}
+        onOpenChange={setCreateCompanyOpen}
+        onCreated={async (newCompanyId) => {
+          await loadUserAndCompanies();
+          switchCompany(newCompanyId);
+        }}
+      />
 
       {/* Search */}
       {!collapsed && (
