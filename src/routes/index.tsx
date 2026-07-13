@@ -294,7 +294,7 @@ function Hero() {
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-elevated">
             <img
               src={heroImage}
-              alt="Free Accounting dashboard showing revenue charts, expenses, and KPIs"
+              alt="FINFLOW TRACK dashboard showing revenue charts, expenses, and KPIs"
               width={1536}
               height={1024}
               className="w-full"
@@ -676,7 +676,7 @@ function Footer() {
           ))}
         </div>
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row md:items-center">
-          <div>© {new Date().getFullYear()} Free Accounting. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} FINFLOW TRACK. All rights reserved.</div>
           <div>Made for freelancers, startups, NGOs, and SMEs worldwide.</div>
         </div>
       </div>
