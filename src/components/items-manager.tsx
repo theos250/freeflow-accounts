@@ -30,6 +30,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useCurrentCompanyId } from "@/hooks/use-current-company";
 
 export type Item = {
   id: string;
@@ -64,6 +65,7 @@ export function ItemsManager({
   title: string;
   description: string;
 }) {
+  const { companyId } = useCurrentCompanyId();
   const [items, setItems] = useState<Item[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
@@ -84,13 +86,15 @@ export function ItemsManager({
   });
 
   async function load() {
+    if (!companyId) return;
     const [i, c] = await Promise.all([
       supabase
         .from("items")
         .select("*, item_categories(name, color)")
         .eq("type", type)
+        .eq("company_id", companyId)
         .order("created_at", { ascending: false }),
-      supabase.from("item_categories").select("id,name").order("name"),
+      supabase.from("item_categories").select("id,name").eq("company_id", companyId).order("name"),
     ]);
     if (i.error) toast.error(i.error.message);
     else setItems(i.data as Item[]);
@@ -98,7 +102,7 @@ export function ItemsManager({
   }
   useEffect(() => {
     load(); /* eslint-disable-next-line */
-  }, [type]);
+  }, [type, companyId]);
 
   function openNew() {
     setEditing(null);
@@ -141,8 +145,10 @@ export function ItemsManager({
     e.preventDefault();
     const { data: u } = await supabase.auth.getUser();
     if (!u.user) return;
+    if (!companyId) return toast.error("No company selected");
     const payload = {
       user_id: u.user.id,
+      company_id: companyId,
       type,
       name: form.name,
       description: form.description || null,
